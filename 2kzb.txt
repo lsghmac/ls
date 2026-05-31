@@ -1,5 +1,4 @@
-全部,#genre#
-
+  "全部": "#genre#",
 CCTV-1综合,http: //rihou.cc:555/tv/CCTV1酒店
 CCTV-1综合,http: //120.233.73.4:19901/tsfile/live/1020_1.m3u8?key=txiptv
 CCTV-1综合,http: //223.78.65.165:9901/tsfile/live/0001_1.m3u8?key=txiptv
@@ -96,10 +95,8 @@ CCTV-17农业农村,http: //rihou.cc:555/tv/CCTV17酒店
 CCTV-17农业农村,http: //61.178.227.57:9901/tsfile/live/0142_1.m3u8?key=txiptv
 CCTV4K,http: //rihou.cc:555/tv/CCTV4K
 CCTV8K,http: //rihou.cc:555/tv/CCTV8K
-
 CCTV世界地理,https: //live.264788.xyz/channel/shijiedili?streamid=4db73bb90b7af6eb8506496390bb0d93&livekey=01WgOR41rriMmMkzNsd0UoaxJRwetZdxIvtVk
 CCTV世界地理,https: //live.264788.xyz/channel/shijiedili?streamid=8a034b40397504e25b3775c772237996&livekey=01WgOR41rriMmMkzNsd0UoaxJRwetZdxIvtVk
-
 北京卫视,http: //rihou.cc:555/tv/北京卫视4K
 湖南卫视,http: //rihou.cc:555/tv/湖南卫视4K
 湖南卫视,http: //rihou.cc:555/tv/湖南卫视
@@ -144,8 +141,6 @@ CETV1,http: //rihou.cc:555/tv/CETV1
 CETV2,http: //rihou.cc:555/tv/CETV2
 CETV3,http: //rihou.cc:555/tv/CETV3
 CETV4,http: //rihou.cc:555/tv/CETV4
-
-
 安徽卫视,http: //223.78.65.165:9901/tsfile/live/0130_1.m3u8?key=txiptv
 安徽卫视,http: //39.164.164.132:9901/tsfile/live/1022_1.m3u8?key=txiptv
 安徽卫视,http: //61.178.227.57:9901/tsfile/live/0130_1.m3u8?key=txiptv
@@ -202,7 +197,6 @@ CETV4,http: //rihou.cc:555/tv/CETV4
 湖南卫视,http: //223.78.65.165:9901/tsfile/live/0016_1.m3u8?key=txiptv
 湖南卫视,http: //39.164.164.132:9901/tsfile/live/1018_1.m3u8?key=txiptv
 湖南卫视,http: //61.178.227.57:9901/tsfile/live/0128_1.m3u8?key=txiptv
-
 湖南卫视,https: //live.264788.xyz/channel/hunanweishi?streamid=06d3f2007e0c04856fb9ea419bbd9cf9&livekey=01WgOR41rriMmMkzNsd0UoaxJRwetZdxIvtVk
 湖南卫视,https: //live.264788.xyz/channel/hunanweishi?streamid=37cb5c9acb9e3f8181024abb01b76800&livekey=01WgOR41rriMmMkzNsd0UoaxJRwetZdxIvtVk
 吉林卫视,http: //39.164.164.132:9901/tsfile/live/1032_1.m3u8?key=txiptv
@@ -254,7 +248,6 @@ CETV4,http: //rihou.cc:555/tv/CETV4
 浙江卫视,http: //223.78.65.165:9901/tsfile/live/0018_1.m3u8?key=txiptv
 浙江卫视,http: //61.178.227.57:9901/tsfile/live/0124_1.m3u8?key=txiptv
 浙江卫视,https: //live.264788.xyz/channel/zhejiangweishi?streamid=25b7c6480cc4c9facb82d1cdf13693ec&livekey=01WgOR41rriMmMkzNsd0UoaxJRwetZdxIvtVk
-
 BTV北京卫视,http: //114.241.104.35:85/tsfile/live/16/1016_1.m3u8?key=txiptv 
 BTV新闻,http: //114.241.104.35:85/tsfile/live/24/1024_1.m3u8?key=txiptv 
 BTV体育,http: //114.241.104.35:85/tsfile/live/25/1025_1.m3u8?key=txiptv 
@@ -273,7 +266,6 @@ JJ斗地主,https: //cdn-3.ttvb.eu.org/bilibili/22021983
 JJ斗地主,https: //cdn-3.ttvb.eu.org/douyu/488743
 JJ斗地主,https: //cdn-3.ttvb.eu.org/huya/152698
 JJ麻将,https: //cdn-3.ttvb.eu.org/huya/28511836
-
 五星体育,https: //live.264788.xyz/channel/wuxingtiyu?streamid=5d17da390f8e4805aae4a71868d4ef6c&livekey=01WgOR41rriMmMkzNsd0UoaxJRwetZdxIvtVk
 五星体育,https: //live.264788.xyz/channel/wuxingtiyu?streamid=86a2efa09c42c8f425082fc405958019&livekey=01WgOR41rriMmMkzNsd0UoaxJRwetZdxIvtVk
 五星体育,https: //live.264788.xyz/channel/wuxingtiyu?streamid=bacdc88caa25b71b955f471072f07349&livekey=01WgOR41rriMmMkzNsd0UoaxJRwetZdxIvtVk
@@ -286,7 +278,6 @@ JJ麻将,https: //cdn-3.ttvb.eu.org/huya/28511836
 广东体育,http: //120.196.235.42:9901/tsfile/live/1014_1.m3u8?key=txiptv&amp;playlive=1&amp;authid=0
 广东体育,http: //183.237.95.108:9901/tsfile/live/1033_1.m3u8?key=txiptv&amp;playlive=0&amp;authid=0
 广东体育,http: //218.15.183.23:9901/tsfile/live/23012_1.m3u8
-
 凤凰卫视,http: //rihou.cc:555/tv/凤凰卫视
 凤凰香港,http: //61.178.227.57:9901/tsfile/live/1012_1.m3u8?key=txiptv
 凤凰香港,http: //cdn6.163189.xyz/163189/fhhk
@@ -298,7 +289,6 @@ JJ麻将,https: //cdn-3.ttvb.eu.org/huya/28511836
 凤凰资讯,http: //cdn6.163189.xyz/163189/fhzx
 凤凰资讯,https: //live.264788.xyz/channel/fenghuangweishizixun?streamid=77bd953dbf073e11b80bba0a8aca92c5&livekey=01WgOR41rriMmMkzNsd0UoaxJRwetZdxIvtVk
 凤凰资讯,https: //live.264788.xyz/channel/fenghuangweishizixun?streamid=7fb13f400476e75ce6c34d1f40c28473&livekey=01WgOR41rriMmMkzNsd0UoaxJRwetZdxIvtVk
-
 香港卫视,http: //webcast.hkstv.tv/livestream/mutfysrq/playlist.m3u8
 TVB新闻,http: //rihou.cc:555/tv/[Pd]无线新闻
 TVB Plus,https: //o11.163189.xyz/stream/tvb/tvbp/
@@ -308,7 +298,6 @@ TVB明珠台,http: //mytv.cdn.loc.cc/o12.php?id=mzt
 TVB翡翠台,http: //iptv.4666888.xyz/iptv2A.php?id=28
 TVB翡翠台,http: //o11.163189.xyz/stream/tvb/fct/
 TVB翡翠台,https: //mytv.cdn.loc.cc/o12.php?id=fct
-
 Now新闻,http: //cdn.163189.xyz/163189/now
 Now新闻,https: //iptv-search.com/live/fav/kKI0Dhw6rJOrnNeZU5Df04ONUfNJ3AYE/22cf1e1b
 镜新闻,http: //rihou.cc:555/tv/镜新闻
@@ -323,21 +312,16 @@ Now新闻,https: //iptv-search.com/live/fav/kKI0Dhw6rJOrnNeZU5Df04ONUfNJ3AYE/22c
 中天亚洲,http: //rihou.cc:555/tv/中天亚洲
 中天综合,http: //rihou.cc:555/tv/中天综合
 中天娱乐,http: //rihou.cc:555/tv/中天娱乐
-
 TVBS新闻,http: //iptv.4666888.xyz/iptv2A.php?id=43
 TVBS新闻,http: //rihou.cc:555/tv/[FY]tvbS新闻
 TVBS新闻,http: //rihou.cc:555/tv/tvbS新闻
 TVBS精采,http: //iptv.4666888.xyz/iptv2A.php?id=47
-
 非凡新闻,http: //iptv.4666888.xyz/iptv2A.php?id=44
 年代新闻,http: //rihou.cc:555/tv/年代新闻
 台湾生活,http: //rihou.cc:555/tv/台湾生活
-
 华视新闻,http: //rihou.cc:555/tv/华视新闻
 中视新闻,http: //rihou.cc:555/tv/中视新闻 
 台视新闻,http: //rihou.cc:555/tv/台视新闻 
-
-
 民视,http: //iptv.4666888.xyz/iptv2A.php?id=55
 民视新闻,http: //rihou.cc:555/tv/民视新闻
 民視综艺,http: //iptv.4666888.xyz/iptv2A.php?id=46
@@ -355,7 +339,6 @@ MoMoTV-4K,https: //iptv-search.com/live/fav/kKI0Dhw6rJOrnNeZU5Df04ONUfNJ3AYE/582
 华视-HD,https: //iptv-search.com/live/fav/kKI0Dhw6rJOrnNeZU5Df04ONUfNJ3AYE/d61be5f3
 民视-HD,https: //iptv-search.com/live/fav/kKI0Dhw6rJOrnNeZU5Df04ONUfNJ3AYE/7290cafa
 台视-HD,https: //iptv-search.com/live/fav/kKI0Dhw6rJOrnNeZU5Df04ONUfNJ3AYE/a1ec1608
-
 黑糖音乐,https: //cdn-3.ttvb.eu.org/douyu/9560563
 下饭音乐,https: //cdn-3.ttvb.eu.org/douyu/8661966
 糖糖音乐,http: //api.guiguiya.com/api/video/dj_mv
@@ -367,9 +350,20 @@ MoMoTV-4K,https: //iptv-search.com/live/fav/kKI0Dhw6rJOrnNeZU5Df04ONUfNJ3AYE/582
 🎵音乐快斗,http: //cfss.cc/cdn/du/8324627.flv
 🎵音乐Wu哥,http: //cfss.cc/cdn/du/8667755.flv
 🎵音乐电视,https: //secured.albportal.net:2083/AlbKanaleMusicTv/index.m3u8
+车载DJ串烧点播❶,https://txmov2.a.kwimgs.com/bs3/video-hls/5195465247443616945_hlsb.m3u8
+车载DJ串烧点播❷,https://txmov2.a.kwimgs.com/bs3/video-hls/5197154098359410997_hlsb.m3u8
+夜店DJ混音点播,https://txmov2.a.kwimgs.com/bs3/video-hls/5238530913892317704_hlsb.m3u8
+老歌DJ串烧点播,https://txmov2.a.kwimgs.com/bs3/video-hls/5234027313336778127_hlsb.m3u8
+国潮DJ舞曲点播,https://txmov2.a.kwimgs.com/bs3/video-hls/5254856460919464679_hlsb.m3u8
+快摇越南鼓点播,https://txmov2.a.kwimgs.com/bs3/video-hls/5246130739648463544_hlsb.m3u8
+带劲越南鼓点播,https://txmov2.a.kwimgs.com/bs3/video-hls/5199968844019002757_hlsb.m3u8
+蹦迪越南鼓点播,https://txmov2.a.kwimgs.com/bs3/video-hls/5253167611834026799_hlsb.m3u8
+40首精选慢摇点播,https://txmov2.a.kwimgs.com/bs3/video-hls/5224175695511900493_hlsb.m3u8
+中文DJ舞曲点播,https://txmov2.a.kwimgs.com/bs3/video-hls/5225020119572067546_hlsb.m3u8
+DJ舞曲串烧点播,https://txmov2.a.kwimgs.com/bs3/video-hls/5259923016524978973_hlsb.m3u8
+热门歌曲DJ点播,https://txmov2.a.kwimgs.com/bs3/video-hls/5232619944545910926_hlsb.m3u8
 横版视频,https: //api.e1e1.top/crosswise/cw.php
 清晰横版,https: //www.cunshao.com/666666/api/pc.php
-
 游戏,#genre#
 「B站」热门赛事,https: //cdn-3.ttvb.eu.org/bilibili/10
 「B站」王者荣耀,https: //cdn-3.ttvb.eu.org/bilibili/55
