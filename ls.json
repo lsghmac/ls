@@ -6,7 +6,7 @@
   "live": {
       "name": "IPTV2K",
       "type": 0,
-      "url": "https://gh-proxy.com/https://raw.githubusercontent.com/lsghmac/ls/main/2kzb.txt
+      "url": "./2kzb.txt
 "
     },
   "sites": [
