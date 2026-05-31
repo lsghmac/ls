@@ -3,11 +3,40 @@
   "wallpaper": "https://haowallpaper.com/link/common/file/previewFileImg/17463514593938816",
   "warningText": "测试使用！",
   "logo": "",
-  "live": {
+  "lives": [
+    {
       "name": "IPTV2K",
       "type": 0,
-      "url": "./2kzb.txt"
+      "url": "https://gh-proxy.com/https://raw.githubusercontent.com/lsghmac/ls/main/2kzb.txt",
+      "timeout": 10,
+      "changeable": 1,
+      "playerType": 2
     },
+    {
+      "name": "📡虎牙",
+      "type": 0,
+      "url": "https://sub.ottiptv.cc/huyayqk.m3u",
+      "ua": ""
+    },
+    {
+      "name": "📡斗鱼",
+      "type": 0,
+      "url": "https://sub.ottiptv.cc/douyuyqk.m3u",
+      "ua": ""
+    },
+    {
+      "name": "📡YY",
+      "type": 0,
+      "url": "https://sub.ottiptv.cc/yylunbo.m3u",
+      "ua": ""
+    },
+    {
+      "name": "📡BL",
+      "type": 0,
+      "url": "https://sub.ottiptv.cc/bililive.m3u",
+      "ua": ""
+    }
+  ],
   "sites": [
     {
       "key": "豆瓣",
