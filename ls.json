@@ -83,33 +83,13 @@
       }
     },
     {
-      "key": "快映",
-      "name": "快映 4K ❤ NET",
-      "type": 3,
-      "changeable": 0,
-      "api": "https://17264.kstore.space/Appfox.min.js",
-      "ext": {
-        "host": "https://www.baidukuaiy.top",
-        "ver": 3
-      }
-    },
-    {
-      "key": "枫叶电影",
-      "name": "枫叶 4K ❤ EASY多线A-",
-      "type": 3,
-      "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/EasyXC/EasyTVbox/main/jar/xiaosa.jar",
-      "api": "csp_XBPQ",
-      "ext": {
-        "请求头": "User-Agent$MOBILE_UA",
-        "简介": "剧情介绍:+text cor3\">[*],&&</div>",
-        "图片": "data-src=\"&&\"[替换:amp;>>空]",
-        "主页url": "https://www.budaichuchen.net/label/qq.html",
-        "副标题": "ft2\">&&</i>",
-        "线路数组": "<i class=\"fa ds-dianying\">&&</span>",
-        "播放数组": "anthology-list-play size\">&&</ul>",
-        "分类url": "https://www.budaichuchen.net/cupfox-list/{cateId}-{area}--{class}-----{catePg}---{year}.html",
-        "分类": "电影$1#电视剧$2#动漫$4#综艺$3#短剧$5"
-      }
+      "key" : "csp_Guazi",
+      "name" : "瓜子(logo)┃rihou单线",
+      "type" : 3,
+      "jar": "http://rihou.cc:88/jar/vox.jar",
+      "api" : "csp_Guazi",
+      "searchable" : 1,
+      "changeable" : 1
     },
     {
       "key": "玩偶",
@@ -241,16 +221,6 @@
       "ext": "http://43.248.117.123:4680"
     },
     {
-      "key": "追剧",
-      "name": "追剧 | Github单线A",
-      "type": 3,
-      "api": "https://gh-proxy.com/https://raw.githubusercontent.com/IY-CPU/IY/main/lib/追剧.py",
-      "searchable": 1,
-      "quickSearch": 1,
-      "filterable": 1,
-      "changeable": 1
-    },
-    {
       "key": "蓝鹰",
       "name": "蓝鹰 | Gitee多线A",
       "type": 3,
@@ -263,46 +233,6 @@
         "api": 2,
         "ua": "okhttp/3.10.0"
       }
-    },
-    {
-      "key": "七味影院",
-      "name": "七味 | EASY多线A",
-      "type": 3,
-      "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/EasyXC/EasyTVbox/main/jar/pixiu/custom_spider.jar",
-      "api": "csp_XBPQ",
-      "searchable": 1,
-      "quickSearch": 1,
-      "filterable": 1,
-      "ext": {
-        "请求头": "User-Agent$MOBILE_UA",
-        "编码": "UTF-8",
-        "防走丢": "https://www.qwmkv.com/",
-        "主页url": "https://www.pkmp4.xyz/",
-        "二次截取": "class=\"pic-list clearfix\"&&</ul>",
-        "数组": "<li>&&</li>",
-        "标题": "title=\"&&\"",
-        "图片": "src=\"&&\"",
-        "副标题": "</i>&&</span>",
-        "链接": "href=\"&&\"",
-        "播放数组": "class=\"player\"&&</ul>",
-        "播放链接": "href=\"&&\"",
-        "播放列表": "<a&&a>",
-        "播放标题": ">&&</",
-        "线路数组": "<option&&option>",
-        "线路标题": "EasyTV专线",
-        "跳转播放链接": "var player_*\"url\":\"&&\"",
-        "分类url": "https://www.pkmp4.xyz/ms/{cateId}-{area}-{by}-{class}-{lang}----{catePg}---{year}.html",
-        "分类": "电影$1#剧集$2#综艺$3#动漫$4#短剧$30"
-      }
-    },
-    {
-      "key": "多duo-橘皮",
-      "name": "橘皮 | NET单线B",
-      "type": 3,
-      "api": "csp_Jpys",
-      "playerType": 1,
-      "jar": "https://ncstatic.clewm.net/rsrc/2026/0321/14/08ddeb54bc5e4c67b24f9ee0dfa280d2.png;md5;bb437516bc7187c2271e946909156c47",
-      "ext": "7lj763gg402i7942463j9j9jh8579590k3hjii5gi4i73l2k5l"
     },
     {
       "key": "xingchenyy",
@@ -380,31 +310,9 @@
     },
     {
       "key": "php_电影天堂",
-      "name": "电天 | NET",
+      "name": "天堂 | NET",
       "type": 4,
       "api": "https://php.doube.eu.org/spider/php/电影天堂.php"
-    },
-    {
-      "key": "咕噜画",
-      "name": "咕噜 4K | EASY多线A-",
-      "type": 3,
-      "changeable": 0,
-      "api": "https://gh-proxy.com/https://raw.githubusercontent.com/EasyXC/EasyTVbox/main/jar/pixiu/Appfox.min.js",
-      "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/EasyXC/EasyTVbox/main/jar/pixiu/tx.jar",
-      "ext": {
-        "host": "http://www.yingsw.top",
-        "timeout": 8,
-        "key": "guluyinghua_123",
-        "sign": "679543610991810f19698c187e5e106e"
-      }
-    },
-    {
-      "key": "jarcai",
-      "name": "文才 | EASY单线B",
-      "type": 3,
-      "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/EasyXC/EasyTVbox/main/jar/pixiu/custom_spider.jar",
-      "api": "csp_Wcai",
-      "ext": "https://www.jxshdzs.com/"
     },
     {
       "key": "虎牙",
