@@ -85,25 +85,62 @@
       }
     },
     {
-      "key": "gimyplus",
-      "name": "剧迷 4K ❤ SVIP",
+      "key": "gimyai",
+      "name": "剧迷AI | TW备用",
       "type": 3,
       "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/EasyXC/EasyTVbox/main/jar/pixiu/custom_spider.jar",
       "api": "csp_XBPQ",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
       "ext": {
-        "分类url": "https://gimyplus.com/show/{cateId}-{area}-{by}------{catePg}---{year}.html",
+        "分类url": "https://gimyai.tw/explore/{cateId}-{area}-{by}------{catePg}---{year}.html",
         "分类": "电影$1#剧集$2#动漫$4#综艺$29",
-        "线路数组": "class=\"playlist&&</div>"
+        "线路二次截取": "class=\"sources route-chips\"&&div>",
+        "线路数组": "data-route-switch=\"&&/a>",
+        "线路标题": ">&&</"
       }
     },
+{
+  "key": "gimyplus",
+  "name": "剧迷plus❤测试",
+  "type": 3,
+  "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/EasyXC/EasyTVbox/main/jar/pixiu/custom_spider.jar",
+  "api": "csp_XBPQ",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+  "ext": {
+    "请求头": "User-Agent$MOBILE_UA#Referer$https://gimyplus.com/",
+    "主页url": "https://gimyplus.com/",
+    "分类url": "https://gimyplus.com/show/{cateId}-{area}-{by}------{catePg}---{year}.html",
+    "分类": "电影$1#剧集$2#动漫$4#综艺$29",
+    "标题": "title=\"&&\"",
+    "图片": "data-original=\"&&\"",
+    "链接": "href=\"&&\"",
+    "线路数组": "class=\"playlist-block__head\"&&</div>",
+    "线路标题": "class=\"playlist-block__title\"*>&&</",
+    "播放数组": "class=\"playlist-grid\"&&</div>",
+    "播放列表": "<a&&</a>",
+    "播放标题": ">&&</",
+    "播放链接": "href=\"&&\"",
+    "跳转播放链接": "player.gimy.bot/u/?url=&&\"",
+    "搜索url": "https://gimyplus.com/search/{wd}-------------.html"
+  }
+},
     {
-      "key" : "csp_Guazi",
-      "name" : "瓜子(logo)┃rihou单线",
-      "type" : 3,
-      "jar": "http://rihou.cc:88/jar/vox.jar",
-      "api" : "csp_Guazi",
-      "searchable" : 1,
-      "changeable" : 1
+      "key": "金牌影视",
+      "name": "金牌｜SVIP单线A",
+      "type": 3,
+      "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/xmbjm/svip/refs/heads/main/svip.jar",
+      "api": "https://gh-proxy.com/https://raw.githubusercontent.com/xmbjm/svip/refs/heads/main/py/金牌影视.py",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "playerType": 2,
+      "ext": {
+        "site": "https://m.hkybqufgh.com,https://m.sizhengxt.com,https://m.9zhoukj.com,https://m.sizhengxt.com,https://m.jiabaide.cn"
+      }
     },
     {
       "key": "玩偶",
@@ -214,6 +251,63 @@
       }
     },
     {
+      "key": "php_电影天堂",
+      "name": "天堂 | NET单线",
+      "type": 4,
+      "api": "https://php.doube.eu.org/spider/php/电影天堂.php",
+      "searchable" : 1,
+      "quickSearch" : 1,
+      "filterable" : 0,
+      "changeable" : 1,
+      "playUrl" : "",
+      "categories" : [
+        "国产剧",
+        "国产动漫",
+        "香港剧",
+        "韩国剧",
+        "欧美剧",
+        "海外剧",
+        "记录片",
+        "大陆综艺",
+        "港台综艺",
+        "日韩综艺",
+        "欧美综艺"
+      ]
+    },
+    {
+      "key" : "电影天堂",
+      "name" : "天堂无广┃rihou单线",
+      "type" : 1,
+      "api" : "http://caiji.dyttzyapi.com/api.php/provide/vod/from/dyttm3u8/at/json/?ac=list",
+      "searchable" : 1,
+      "quickSearch" : 1,
+      "filterable" : 0,
+      "changeable" : 1,
+      "playUrl" : "",
+      "categories" : [
+        "国产剧",
+        "国产动漫",
+        "香港剧",
+        "韩国剧",
+        "欧美剧",
+        "海外剧",
+        "记录片",
+        "大陆综艺",
+        "港台综艺",
+        "日韩综艺",
+        "欧美综艺"
+      ]
+    },
+    {
+      "key" : "csp_Guazi",
+      "name" : "瓜子(logo)┃rihou单线",
+      "type" : 3,
+      "jar": "http://rihou.cc:88/jar/vox.jar",
+      "api" : "csp_Guazi",
+      "searchable" : 1,
+      "changeable" : 1
+    },
+    {
       "key": "爱看剧",
       "name": "看剧 | Github多线A",
       "type": 3,
@@ -241,22 +335,8 @@
       "api": "http://rihou.cc:88/js/星辰影院.js"
     },
     {
-      "key": "金牌影视",
-      "name": "金牌｜SVIP单线A",
-      "type": 3,
-      "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/xmbjm/svip/refs/heads/main/svip.jar",
-      "api": "https://gh-proxy.com/https://raw.githubusercontent.com/xmbjm/svip/refs/heads/main/py/金牌影视.py",
-      "searchable": 1,
-      "quickSearch": 1,
-      "filterable": 1,
-      "playerType": 2,
-      "ext": {
-        "site": "https://m.hkybqufgh.com,https://m.sizhengxt.com,https://m.9zhoukj.com,https://m.sizhengxt.com,https://m.jiabaide.cn"
-      }
-    },
-    {
       "key": "猎手影视",
-      "name": "猎手 | SVIP多线S",
+      "name": "猎手(广) | SVIP多线S",
       "type": 3,
       "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/xmbjm/svip/refs/heads/main/svip.jar",
       "api": "https://gh-proxy.com/https://raw.githubusercontent.com/xmbjm/svip/refs/heads/main/py/猎手影视.py",
@@ -288,11 +368,38 @@
         "播放链接": "href=\"&&\"",
         "播放标题": ">&&</",
         "线路数组": "class=\"play-source-tab\"&&div>",
-        "线路标题": "EasyTV专线",
         "跳转播放链接": "var player_*\"url\":\"&&\"",
         "分类url": "https://silidm.com/show/{cateId}-{area}-{by}-{class}-{lang}-{letter}---{catePg}---{year}.html",
         "分类": "电影$dianying#剧集$juji#动漫$dongman#综艺$zongyi"
       }
+    },
+    {
+      "key" : "腾腾",
+      "name" : "🐧腾讯┃rihou",
+      "type" : 3,
+      "api" : "http://rihou.cc:88/js/drpy2.min.js",
+      "ext" : "http://rihou.cc:88/js/腾腾.js"
+    },
+    {
+      "key" : "奇奇",
+      "name" : "🐴爱奇艺┃rihou",
+      "type" : 3,
+      "api" : "http://rihou.cc:88/js/drpy2.min.js",
+      "ext" : "http://rihou.cc:88/js/奇奇.js"
+    },
+    {
+      "key" : "果果",
+      "name" : "🍋芒果┃rihou",
+      "type" : 3,
+      "api" : "http://rihou.cc:88/js/drpy2.min.js",
+      "ext" : "http://rihou.cc:88/js/果果.js"
+    },
+    {
+      "key" : "酷酷",
+      "name" : "😎优酷┃rihou",
+      "type" : 3,
+      "api" : "http://rihou.cc:88/js/drpy2.min.js",
+      "ext" : "http://rihou.cc:88/js/酷酷.js"
     },
     {
       "key": "芒果视频",
@@ -308,12 +415,7 @@
       "api": "https://gh-proxy.com/https://raw.githubusercontent.com/xmbjm/svip/refs/heads/main/js/drpy2.min.js",
       "ext": "https://gh-proxy.com/https://raw.githubusercontent.com/xmbjm/svip/refs/heads/main/js/爱奇艺.js"
     },
-    {
-      "key": "php_电影天堂",
-      "name": "天堂 | NET",
-      "type": 4,
-      "api": "https://php.doube.eu.org/spider/php/电影天堂.php"
-    },
+
     {
       "key": "虎牙",
       "name": "虎牙直播 🐯 SVIP",
@@ -369,29 +471,31 @@
       "api": "csp_LocalFile"
     },
     {
+      "key" : "csp_Cjhj",
+      "name" : "采集合集┃rihou",
+      "type" : 3,
+      "jar": "http://rihou.cc:88/jar/vox.jar",
+      "api" : "csp_Cjhj",
+      "searchable" : 1,
+      "changeable" : 0
+    },
+    {
       "key": "采集之王",
-      "name": "采集聚合 ❌ SVIP",
+      "name": "采集聚合┃SVIP",
       "type": 3,
       "api": "https://gh-proxy.com/https://raw.githubusercontent.com/xmbjm/svip/refs/heads/main/js/drpy2.min.js",
       "ext": "https://gh-proxy.com/https://raw.githubusercontent.com/xmbjm/svip/refs/heads/main/js/采集之王.js?type=url&params=https://gh-proxy.com/https://raw.githubusercontent.com/xmbjm/svip/refs/heads/main/json/采集静态.json$1$1"
-    },
-    {
-      "key": "gimyai",
-      "name": "劇迷AI | TW备用",
-      "type": 3,
-      "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/EasyXC/EasyTVbox/main/jar/pixiu/custom_spider.jar",
-      "api": "csp_XBPQ",
-      "searchable": 1,
-      "quickSearch": 1,
-      "filterable": 1,
-      "ext": {
-        "分类url": "https://gimyai.tw/explore/{cateId}-{area}-{by}------{catePg}---{year}.html",
-        "分类": "电影$1#剧集$2#动漫$4#综艺$29",
-        "线路数组": "class=\"playlist&&</div>"
-      }
     }
   ],
   "parses": [
+  {
+    "name": "剧迷解析",
+    "type": 1,
+    "url": "https://player.gimy.bot/u/?url=",
+    "ext": {
+      "flag": ["qiyi", "qq", "mgtv", "youku"]
+    }
+  },
     {
       "name": "虾米",
       "type": 0,
