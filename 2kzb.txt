@@ -93,7 +93,8 @@ CCTV-16奥林匹克,https://live.264788.xyz/channel/cctv16?streamid=d8dbfb7e9b4e
 CCTV-17农业农村,http://rihou.cc:555/tv/CCTV17酒店
 CCTV-17农业农村,http://61.178.227.57:9901/tsfile/live/0142_1.m3u8?key=txiptv
 CCTV4K-超高清,http://rihou.cc:555/tv/CCTV4K
-CCTV8K-超高清,http://rihou.cc:555/tv/CCTV8K北京卫视,http://rihou.cc:555/tv/北京卫视4K
+CCTV8K-超高清,http://rihou.cc:555/tv/CCTV8K
+北京卫视,http://rihou.cc:555/tv/北京卫视4K
 湖南卫视,http://rihou.cc:555/tv/湖南卫视4K
 湖南卫视,http://rihou.cc:555/tv/湖南卫视
 江苏卫视,http://rihou.cc:555/tv/江苏卫视4K
