@@ -92,8 +92,8 @@ CCTV-10科教,https://live.264788.xyz/channel/cctv10?streamid=a6610f7c03ec538e46
 
 CCTV-11戏曲,http://223.78.65.165:9901/tsfile/live/0012_1.m3u8?key=txiptv
 CCTV-11戏曲,http://39.164.164.132:9901/tsfile/live/1010_1.m3u8?key=txiptv
-CCTV-11,https://live.264788.xyz/channel/cctv11?streamid=7b9945eb3e3a3628d7a273fff55b8d1e&livekey=01Wb7kjxu1xx2f7s4uEtWDnhgEQQECTlBWih6
-CCTV-11,https://live.264788.xyz/channel/cctv11?streamid=7b9945eb3e3a3628d7a273fff55b8d1e&livekey=01Wb7kjxu1xx2f7s4tcqSAF03RfwBkY7h8Nz2
+CCTV-11戏曲,https://live.264788.xyz/channel/cctv11?streamid=7b9945eb3e3a3628d7a273fff55b8d1e&livekey=01Wb7kjxu1xx2f7s4uEtWDnhgEQQECTlBWih6
+CCTV-11戏曲,https://live.264788.xyz/channel/cctv11?streamid=7b9945eb3e3a3628d7a273fff55b8d1e&livekey=01Wb7kjxu1xx2f7s4tcqSAF03RfwBkY7h8Nz2
 
 CCTV-12社会与法,http://120.233.73.4:19901/tsfile/live/1033_1.m3u8?key=txiptv
 CCTV-12社会与法,http://223.78.65.165:9901/tsfile/live/0013_1.m3u8?key=txiptv
@@ -102,7 +102,6 @@ CCTV-12社会与法,http://61.178.227.57:9901/tsfile/live/0012_1.m3u8?key=txiptv
 CCTV-12社会与法,https://live.264788.xyz/channel/cctv12?streamid=0f34c587b2bea8f82b43463faa4b5708&livekey=01WgOR41rriMmMkzNsd0UoaxJRwetZdxIvtVk
 CCTV-12社会与法,https://live.264788.xyz/channel/cctv12?streamid=0f34c587b2bea8f82b43463faa4b5708&livekey=01Wb7kjxu1xx2f7s4uEtWDnhgEQQECTlBWih6
 
-CCTV13新闻,http://118.193.115.2:9901/tsfile/live/0013_1.m3u8?key=txiptv
 CCTV-13新闻,http://223.78.65.165:9901/tsfile/live/0014_1.m3u8?key=txiptv
 CCTV-13新闻,http://61.178.227.57:9901/tsfile/live/0013_1.m3u8?key=txiptv
 CCTV-13新闻,https://live.264788.xyz/channel/cctv13?streamid=18337d7a8a925fefa6736f2af5f779a5&livekey=01WgOR41rriMmMkzNsd0UoaxJRwetZdxIvtVk
@@ -176,7 +175,6 @@ CCTV女性时尚,https://live.264788.xyz/channel/nvxingshishang?streamid=15732e4
 湖南卫视,https://live.264788.xyz/channel/hunanweishi?streamid=06d3f2007e0c04856fb9ea419bbd9cf9&livekey=01WgOR41rriMmMkzNsd0UoaxJRwetZdxIvtVk
 湖南卫视,https://live.264788.xyz/channel/hunanweishi?streamid=37cb5c9acb9e3f8181024abb01b76800&livekey=01WgOR41rriMmMkzNsd0UoaxJRwetZdxIvtVk
 湖南卫视,https://live.264788.xyz/channel/hunanweishi?streamid=55aa70b744ce4863ca4f21755ce7821f&livekey=01WgOR41rriMmMkzNsd0UoaxJRwetZdxIvtVk
-湖南卫视4K,https://live.264788.xyz/channel/hunanweishi4k?streamid=1d2cff60e497ead8198445a199d19583&livekey=01Wb7kjxu1xx2f7s4tcqSAF03RfwBkY7h8Nz2
 
 安徽卫视,http://223.78.65.165:9901/tsfile/live/0130_1.m3u8?key=txiptv
 安徽卫视,http://39.164.164.132:9901/tsfile/live/1022_1.m3u8?key=txiptv
@@ -258,14 +256,13 @@ CHC家庭影院,https://live.264788.xyz/channel/chcjiatingyingyuan?streamid=136f
 
 凤凰香港,http://cdn6.163189.xyz/163189/fhhk
 凤凰香港,http://61.178.227.57:9901/tsfile/live/1012_1.m3u8?key=txiptv
-凤凰中文,http://61.178.227.57:9901/tsfile/live/1013_1.m3u8?key=txiptv
 凤凰中文,http://cdn6.163189.xyz/163189/fhzw
+凤凰中文,http://61.178.227.57:9901/tsfile/live/1013_1.m3u8?key=txiptv
 凤凰中文,https://live.264788.xyz/channel/fenghuangweishizhongwen?streamid=2f797f6963d4df5f391f48edfa50ff59&livekey=01WgOR41rriMmMkzNsd0UoaxJRwetZdxIvtVk
 凤凰中文,https://live.264788.xyz/channel/fenghuangweishizhongwen?streamid=3ed416f2709e7ecaf6dc1b9d9c66bb5e&livekey=01WgOR41rriMmMkzNsd0UoaxJRwetZdxIvtVk
 凤凰中文,https://live.264788.xyz/channel/fenghuangweishizhongwen?streamid=3ed416f2709e7ecaf6dc1b9d9c66bb5e&livekey=01Wb7kjxu1xx2f7s4uEtWDnhgEQQECTlBWih6
-
-凤凰资讯,http://61.178.227.57:9901/tsfile/live/1014_1.m3u8?key=txiptv
 凤凰资讯,http://cdn6.163189.xyz/163189/fhzx
+凤凰资讯,http://61.178.227.57:9901/tsfile/live/1014_1.m3u8?key=txiptv
 凤凰资讯,https://live.264788.xyz/channel/fenghuangweishizixun?streamid=77bd953dbf073e11b80bba0a8aca92c5&livekey=01WgOR41rriMmMkzNsd0UoaxJRwetZdxIvtVk
 凤凰资讯,https://live.264788.xyz/channel/fenghuangweishizixun?streamid=77bd953dbf073e11b80bba0a8aca92c5&livekey=01Wb7kjxu1xx2f7s4uEtWDnhgEQQECTlBWih6
 凤凰资讯,https://live.264788.xyz/channel/fenghuangweishizixun?streamid=7fb13f400476e75ce6c34d1f40c28473&livekey=01WgOR41rriMmMkzNsd0UoaxJRwetZdxIvtVk
@@ -282,7 +279,6 @@ TVB翡翠台,http://iptv.4666888.xyz/iptv2A.php?id=28
 TVB翡翠台,http://o11.163189.xyz/stream/tvb/fct/
 TVB翡翠台,https://mytv.cdn.loc.cc/o12.php?id=fct
 
-中天新闻,http://222.128.55.152:9080/live/fc.m3u8
 中天新闻,http://rihou.cc:555/tv/中天新闻
 TVBS新闻,http://iptv.4666888.xyz/iptv2A.php?id=43
 TVBS新闻,http://rihou.cc:555/tv/[FY]tvbS新闻
