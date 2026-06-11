@@ -18,6 +18,7 @@ CCTV15,http://118.193.115.2:9901/tsfile/live/0015_1.m3u8?key=txiptv
 湖南卫视,http://118.193.115.2:9901/tsfile/live/0128_2.m3u8?key=txiptv
 北京卫视,http://118.193.115.2:9901/tsfile/live/0122_1.m3u8?key=txiptv
 辽宁卫视,http://118.193.115.2:9901/tsfile/live/0121_1.m3u8?key=txiptv
+
 全部,#genre#
 CCTV-1综合,http://120.233.73.4:19901/tsfile/live/1020_1.m3u8?key=txiptv
 CCTV-1综合,http://223.78.65.165:9901/tsfile/live/0001_1.m3u8?key=txiptv
@@ -145,7 +146,8 @@ CCTV女性时尚,https://live.264788.xyz/channel/nvxingshishang?streamid=15732e4
 北京卫视,https://live.264788.xyz/channel/beijingweishi?streamid=83e17d40a257c99cd03440142db1b4a4&livekey=01WgOR41rriMmMkzNsd0UoaxJRwetZdxIvtVk
 北京卫视,https://live.264788.xyz/channel/beijingweishi?streamid=e078747837ff9cad6d2a314ebeffa51c&livekey=01WgOR41rriMmMkzNsd0UoaxJRwetZdxIvtVk
 北京卫视,https://live.264788.xyz/channel/beijingweishi?streamid=ef3b375a76fa91e8a49f9aecda01f617&livekey=01WgOR41rriMmMkzNsd0UoaxJRwetZdxIvtVk
-
+北京纪实科教,https://live.264788.xyz/channel/beijingjishikejiao?streamid=df464c64af62853da71f951b2ed3228f&livekey=01WgOR41rriMmMkzNsd0UoaxJRwetZdxIvtVk
+北京纪实科教,https://live.264788.xyz/channel/beijingjishikejiao?streamid=2f052390b23a1d26ae24a90626086577&livekey=01WgOR41rriMmMkzNsd0UoaxJRwetZdxIvtVk
 辽宁卫视,http://223.78.65.165:9901/tsfile/live/0121_1.m3u8?key=txiptv
 辽宁卫视,http://39.164.164.132:9901/tsfile/live/1034_1.m3u8?key=txiptv
 辽宁卫视,http://61.178.227.57:9901/tsfile/live/0121_1.m3u8?key=txiptv
@@ -161,7 +163,12 @@ CCTV女性时尚,https://live.264788.xyz/channel/nvxingshishang?streamid=15732e4
 江苏卫视,http://223.78.65.165:9901/tsfile/live/0017_1.m3u8?key=txiptv
 江苏卫视,http://39.164.164.132:9901/tsfile/live/1017_1.m3u8?key=txiptv
 江苏卫视,http://61.178.227.57:9901/tsfile/live/0127_1.m3u8?key=txiptv
+江苏卫视,https://live.264788.xyz/channel/jiangsuweishi?streamid=2e3c19907f83ee49962e7a3b1db2c093&livekey=01WgOR41rriMmMkzNsd0UoaxJRwetZdxIvtVk
+江苏卫视,https://live.264788.xyz/channel/jiangsuweishi?streamid=01b71cbe218e3ae09ceb25b64aec1f33&livekey=01WgOR41rriMmMkzNsd0UoaxJRwetZdxIvtVk
+江苏卫视,https://live.264788.xyz/channel/jiangsuweishi?streamid=532885846757ddf8f597ab4a3ca7101e&livekey=01WgOR41rriMmMkzNsd0UoaxJRwetZdxIvtVk
 江苏卫视,https://live.264788.xyz/channel/jiangsuweishi?streamid=430ccd55b3374b7e3ccc7388e90566c8&livekey=01WgOR41rriMmMkzNsd0UoaxJRwetZdxIvtVk
+江苏卫视,https://live.264788.xyz/channel/jiangsuweishi?streamid=380709c4c392f08f4dcd85c5bb49fac4&livekey=01WgOR41rriMmMkzNsd0UoaxJRwetZdxIvtVk
+江苏卫视,https://live.264788.xyz/channel/jiangsuweishi?streamid=a94278eea34cd01c27cbaca9f3c6e967&livekey=01WgOR41rriMmMkzNsd0UoaxJRwetZdxIvtVk
 
 浙江卫视,http://120.233.73.4:19901/tsfile/live/1008_1.m3u8?key=txiptv
 浙江卫视,http://223.78.65.165:9901/tsfile/live/0018_1.m3u8?key=txiptv
@@ -268,7 +275,7 @@ CHC家庭影院,https://live.264788.xyz/channel/chcjiatingyingyuan?streamid=136f
 凤凰资讯,https://live.264788.xyz/channel/fenghuangweishizixun?streamid=7fb13f400476e75ce6c34d1f40c28473&livekey=01WgOR41rriMmMkzNsd0UoaxJRwetZdxIvtVk
 
 香港卫视,http://webcast.hkstv.tv/livestream/mutfysrq/playlist.m3u8
-
+Now新闻,http://cdn.163189.xyz/163189/now
 TVB新闻,https://cdn6.163189.xyz/163189/wxxw
 TVB Plus,https://o11.163189.xyz/stream/tvb/tvbp/
 TVB娱乐新闻,http://iptv.4666888.xyz/iptv2A.php?id=36
@@ -284,7 +291,7 @@ TVBS新闻,http://iptv.4666888.xyz/iptv2A.php?id=43
 TVBS新闻,http://rihou.cc:555/tv/[FY]tvbS新闻
 TVBS精采,http://iptv.4666888.xyz/iptv2A.php?id=47
 TVBS新闻,http://rihou.cc:555/tv/tvbS新闻
-Now新闻,http://cdn.163189.xyz/163189/now
+
 非凡新闻,http://iptv.4666888.xyz/iptv2A.php?id=44
 镜新闻,http://rihou.cc:555/tv/镜新闻
 寰宇新闻,http://rihou.cc:555/tv/寰宇新闻
@@ -377,3 +384,16 @@ HOY 77,http://cdn.163189.xyz/163189/hoy
 🎵音乐快斗,http://cfss.cc/cdn/du/8324627.flv
 🎵音乐Wu哥,http://cfss.cc/cdn/du/8667755.flv
 🎵音乐电视,https://secured.albportal.net:2083/AlbKanaleMusicTv/index.m3u8
+🎵韩国歌曲,https://xn--vusr00g.v.nxog.top/m/tv/xjj.php?id=0
+车载DJ串烧点播❶,https://txmov2.a.kwimgs.com/bs3/video-hls/5195465247443616945_hlsb.m3u8
+车载DJ串烧点播❷,https://txmov2.a.kwimgs.com/bs3/video-hls/5197154098359410997_hlsb.m3u8
+夜店DJ混音点播,https://txmov2.a.kwimgs.com/bs3/video-hls/5238530913892317704_hlsb.m3u8
+老歌DJ串烧点播,https://txmov2.a.kwimgs.com/bs3/video-hls/5234027313336778127_hlsb.m3u8
+国潮DJ舞曲点播,https://txmov2.a.kwimgs.com/bs3/video-hls/5254856460919464679_hlsb.m3u8
+快摇越南鼓点播,https://txmov2.a.kwimgs.com/bs3/video-hls/5246130739648463544_hlsb.m3u8
+带劲越南鼓点播,https://txmov2.a.kwimgs.com/bs3/video-hls/5199968844019002757_hlsb.m3u8
+蹦迪越南鼓点播,https://txmov2.a.kwimgs.com/bs3/video-hls/5253167611834026799_hlsb.m3u8
+40首精选慢摇点播,https://txmov2.a.kwimgs.com/bs3/video-hls/5224175695511900493_hlsb.m3u8
+中文DJ舞曲点播,https://txmov2.a.kwimgs.com/bs3/video-hls/5225020119572067546_hlsb.m3u8
+DJ舞曲串烧点播,https://txmov2.a.kwimgs.com/bs3/video-hls/5259923016524978973_hlsb.m3u8
+热门歌曲DJ点播,https://txmov2.a.kwimgs.com/bs3/video-hls/5232619944545910926_hlsb.m3u8
