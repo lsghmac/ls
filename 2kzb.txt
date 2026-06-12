@@ -283,29 +283,38 @@ TVB娱乐新闻,https://cdn6.163189.xyz/163189/ylxw
 TVB明珠台,http://iptv.4666888.xyz/iptv2A.php?id=29
 TVB明珠台,http://mytv.cdn.loc.cc/o12.php?id=mzt
 TVB翡翠台,http://iptv.4666888.xyz/iptv2A.php?id=28
+TVB翡翠台,https://cdn6.163189.xyz/163189/fct
 TVB翡翠台,http://o11.163189.xyz/stream/tvb/fct/
 TVB翡翠台,https://mytv.cdn.loc.cc/o12.php?id=fct
 
 中天新闻,http://rihou.cc:555/tv/中天新闻
+TVBS,http://rihou.cc:555/tv/TVBS1
 TVBS新闻,http://iptv.4666888.xyz/iptv2A.php?id=43
 TVBS新闻,http://rihou.cc:555/tv/[FY]tvbS新闻
-TVBS精采,http://iptv.4666888.xyz/iptv2A.php?id=47
 TVBS新闻,http://rihou.cc:555/tv/tvbS新闻
+TVBS精采,http://iptv.4666888.xyz/iptv2A.php?id=47
 
 非凡新闻,http://iptv.4666888.xyz/iptv2A.php?id=44
 镜新闻,http://rihou.cc:555/tv/镜新闻
 寰宇新闻,http://rihou.cc:555/tv/寰宇新闻
 寰宇台湾,http://rihou.cc:555/tv/寰宇台湾
 东森新闻,http://rihou.cc:555/tv/东森新闻
+东森综合,http://iptv.4666888.xyz/iptv2A.php?id=58
 华视新闻,http://rihou.cc:555/tv/华视新闻
-中视新闻,http://rihou.cc:555/tv/中视新闻 
-台视新闻,http://rihou.cc:555/tv/台视新闻 
+中视新闻,http://rihou.cc:555/tv/中视新闻
+中视新闻,http://rihou.cc:555/tv/[Hk]中视新闻
+台视新闻,http://rihou.cc:555/tv/台视新闻
 民视新闻,http://rihou.cc:555/tv/民视新闻
 民视,http://iptv.4666888.xyz/iptv2A.php?id=55
 民視综艺,http://iptv.4666888.xyz/iptv2A.php?id=46
 娱乐百分百,http://iptv.4666888.xyz/iptv2A.php?id=64
 华艺中文,http://iptv.4666888.xyz/iptv2A.php?id=37
 HOY 77,http://cdn.163189.xyz/163189/hoy
+HOY77,http://iptv.4666888.xyz/iptv2A.php?id=35
+VIUTV,https://cdn.163189.xyz/163189/viu
+RTHK 31,http://cdn.163189.xyz/163189/rthk31
+RTHK 31,http://iptv.4666888.xyz/iptv2A.php?id=23
+RTHK 32,http://cdn.163189.xyz/163189/rthk32
 
 游戏,#genre#
 🎮JJ斗地主,https://cdn-3.ttvb.eu.org/bilibili/22021983
