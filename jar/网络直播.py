@@ -15,6 +15,7 @@ from base64 import b64decode, b64encode
 from urllib.parse import parse_qs
 import requests
 from pyquery import PyQuery as pq
+from bs4 import BeautifulSoup
 sys.path.append('..')
 from base.spider import Spider
 from concurrent.futures import ThreadPoolExecutor
@@ -185,29 +186,35 @@ class Spider(Spider):
         try:
             cid = extend.get('cate', tid) if extend else tid
             url = f'https://search.bilibili.com/live?keyword={cid}&page={pg}'
-            resp = self.fetch(url, headers=self.headers[0]).text
-            doc = pq(resp)
 
-            for item in doc('div.video-list-item'):
-                el = pq(item)
-                name_el = el('h3.bili-live-card__info--tit')
-                name = name_el.text().strip().replace('直播中', '')
-                link = name_el('a').attr('href')
-                if not link:
+            req_headers = {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36 Edg/129.0.0.0',
+                'Referer': 'https://www.bilibili.com/'
+            }
+
+            detail = requests.get(url=url, headers=req_headers)
+            detail.encoding = "utf-8"
+            doc = BeautifulSoup(detail.text, "lxml")
+
+            for vod in doc.find_all('div', class_="video-list-item"):
+                names = vod.find('h3', class_="bili-live-card__info--tit")
+                if not names:
                     continue
+                name = names.text.strip().replace('直播中', '')
+                link = names.find('a')['href']
                 room_id = link.split('bilibili.com/')[1].split('?')[0] if 'bilibili.com/' in link else ''
                 if not room_id:
                     continue
-                pic_el = el('img').attr('src')
-                if pic_el and 'http' not in pic_el:
-                    pic_el = 'https:' + pic_el
-                remarks_el = el('a.bili-live-card__info--uname')
-                remark = remarks_el.text().strip()
+                pic = vod.find('img')['src']
+                if 'http' not in pic:
+                    pic = "https:" + pic
+                remarks = vod.find('a', class_="bili-live-card__info--uname")
+                remark = remarks.text.strip() if remarks else ''
 
                 v = self.buildvod(
                     vod_id=f"bili@@{room_id}",
                     vod_name=name,
-                    vod_pic=pic_el,
+                    vod_pic=pic,
                     vod_remarks=remark,
                     style={"type": "rect", "ratio": 1.33}
                 )
