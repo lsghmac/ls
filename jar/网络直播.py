@@ -10,6 +10,7 @@ import sys
 import time
 import hashlib
 import random
+import string
 import urllib.parse
 from base64 import b64decode, b64encode
 from urllib.parse import parse_qs
@@ -24,7 +25,7 @@ from concurrent.futures import ThreadPoolExecutor
 class Spider(Spider):
 
     def init(self, extend=""):
-        pass
+        self.dy_cookie_cache = ""
 
     def getName(self):
         return "直播"
@@ -53,13 +54,15 @@ class Spider(Spider):
         "huya": ["https://www.huya.com", "https://mp.huya.com"],
         "douyu": "https://www.douyu.com",
         "wangyi": "https://cc.163.com",
-        "bili": ["https://api.live.bilibili.com", "https://api.bilibili.com"]
+        "bili": ["https://api.live.bilibili.com", "https://api.bilibili.com"],
+        "douyin": "https://live.douyin.com"
     }
 
     referers = {
         "huya": "https://live.cdn.huya.com",
         "douyu": "https://m.douyu.com",
-        "bili": "https://live.bilibili.com"
+        "bili": "https://live.bilibili.com",
+        "douyin": "https://live.douyin.com"
     }
 
     playheaders = {
@@ -80,6 +83,10 @@ class Spider(Spider):
         'douyu': {
             'User-Agent': 'libmpv',
             'Icy-MetaData': '1'
+        },
+        'douyin': {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+            'Referer': 'https://live.douyin.com'
         }
     }
 
@@ -105,13 +112,27 @@ class Spider(Spider):
             print(f"douyu错误: {e}")
             return 'douyu', None
 
+    def process_douyin(self):
+        return ('douyin', [{'key': 'cate', 'name': '分类',
+                            'value': [{'n': '娱乐天地', 'v': '10000$3'},
+                                      {'n': '科技文化', 'v': '10001$3'},
+                                      {'n': '音乐', 'v': '102$4'},
+                                      {'n': '游戏', 'v': '103$4'},
+                                      {'n': '舞蹈', 'v': '105$4'},
+                                      {'n': '聊天', 'v': '101$4'},
+                                      {'n': '运动', 'v': '108$4'},
+                                      {'n': '生活', 'v': '107$4'},
+                                      {'n': '文化', 'v': '106$4'},
+                                      {'n': '二次元', 'v': '104$4'}]}])
+
     def homeContent(self, filter):
         result = {}
         cateManual = {
             "虎牙": "huya",
             "斗鱼": "douyu",
             "网易": "wangyi",
-            "B站": "bili"
+            "B站": "bili",
+            "抖音": "douyin"
         }
         classes = []
         filters = {
@@ -120,10 +141,11 @@ class Spider(Spider):
                                 {'n': '娱乐', 'v': '8'}, {'n': '手游', 'v': '3'}]}]
         }
 
-        with ThreadPoolExecutor(max_workers=2) as executor:
+        with ThreadPoolExecutor(max_workers=3) as executor:
             futures = {
                 executor.submit(self.process_bili): 'bili',
-                executor.submit(self.process_douyu): 'douyu'
+                executor.submit(self.process_douyu): 'douyu',
+                executor.submit(self.process_douyin): 'douyin'
             }
 
             for future in futures:
@@ -159,6 +181,8 @@ class Spider(Spider):
             vdata, pagecount = self.huyaContent(tid, pg, filter, extend, vdata)
         elif 'douyu' in tid:
             vdata, pagecount = self.douyuContent(tid, pg, filter, extend, vdata)
+        elif 'douyin' in tid:
+            vdata, pagecount = self.douyinContent(tid, pg, filter, extend, vdata)
         result['list'] = vdata
         result['pagecount'] = pagecount
         return result
@@ -223,6 +247,71 @@ class Spider(Spider):
             return vdata, 9999
         except Exception as e:
             print(f"B站内容获取错误: {e}")
+            return vdata, 1
+
+    def douyinContent(self, tid, pg, filter, extend, vdata):
+        try:
+            cid = extend.get('cate', '10000$3') if extend else '10000$3'
+            page = int(pg or 1)
+            offset = 15 * (page - 1)
+            parts = cid.split('$')
+            if len(parts) < 2:
+                return vdata, 1
+            partition, ptype = parts[0], parts[1]
+
+            params = {
+                "aid": "6383",
+                "app_name": "douyin_web",
+                "live_id": "1",
+                "device_platform": "web",
+                "language": "zh-CN",
+                "browser_language": "zh-CN",
+                "browser_platform": "Win32",
+                "browser_name": "Chrome",
+                "browser_version": "120.0.0.0",
+                "partition": partition,
+                "partition_type": ptype,
+                "count": "15",
+                "offset": str(offset),
+                "web_rid": self._generate_device_id(),
+                "cookie_enabled": "true",
+                "screen_width": "1920",
+                "screen_height": "1080"
+            }
+
+            headers = self._get_douyin_headers()
+            urls = [
+                "https://live.douyin.com/webcast/web/partition/detail/room/v2/",
+                "https://webcast.amemv.com/webcast/web/partition/detail/room/v2/",
+            ]
+
+            for url in urls:
+                try:
+                    resp = self.fetch(url, headers=headers, params=params, verify=False)
+                    data = resp.json()
+                    if data.get('status_code') != 0:
+                        continue
+                    if not data.get('data', {}).get('data'):
+                        break
+                    items = data['data']['data']
+                    for it in items:
+                        web_rid = it.get('web_rid') or self._generate_device_id()
+                        room = it['room']
+                        v = self.buildvod(
+                            vod_id=f"douyin@@{web_rid}@@{room['id_str']}",
+                            vod_name=room['title'],
+                            vod_pic=room['cover']['url_list'][0],
+                            vod_remarks=f"{room['owner']['nickname']} (🔥{room['stats']['user_count_str']})",
+                            style={"type": "rect", "ratio": 1.33}
+                        )
+                        vdata.append(v)
+                    break
+                except Exception:
+                    continue
+
+            return vdata, 9999
+        except Exception as e:
+            print(f"抖音内容获取错误: {e}")
             return vdata, 1
 
     def huyaContent(self, tid, pg, filter, extend, vdata):
@@ -307,6 +396,8 @@ class Spider(Spider):
             vod = self.huyaDetail(ids)
         elif ids[0] == 'douyu':
             vod = self.douyuDetail(ids)
+        elif ids[0] == 'douyin':
+            vod = self.douyinDetail(ids)
         return {'list': [vod]}
 
     def wyccDetail(self, ids):
@@ -387,6 +478,81 @@ class Spider(Spider):
 
         except Exception as e:
             print(f"B站详情错误: {e}")
+            return self.handle_exception(e)
+
+    def douyinDetail(self, ids):
+        try:
+            if len(ids) < 3:
+                return self.handle_exception(Exception("抖音参数不足"))
+            web_rid, room_id = ids[1], ids[2]
+
+            url = "https://live.douyin.com/webcast/room/web/enter/"
+            params = {
+                "aid": "6383",
+                "app_name": "douyin_web",
+                "live_id": "1",
+                "device_platform": "web",
+                "enter_from": "web_live",
+                "browser_language": "zh-CN",
+                "browser_platform": "Win32",
+                "browser_name": "Chrome",
+                "browser_version": "120.0.0.0",
+                "web_rid": web_rid,
+                "room_id_str": room_id,
+                "enter_source": "",
+                "is_need_double_stream": "false"
+            }
+
+            headers = self._get_douyin_headers()
+            r = self.fetch(url, params=params, headers=headers, verify=False)
+            data = r.json()
+            if not data.get('data', {}).get('data'):
+                return self.handle_exception(Exception("抖音获取房间信息失败"))
+            info = data['data']['data'][0]
+
+            resolution_map = {
+                "FULL_HD1": "蓝光",
+                "HD1": "超清",
+                "ORIGION": "原画",
+                "SD1": "标清",
+                "SD2": "高清"
+            }
+
+            flv_pull = info.get('stream_url', {}).get('flv_pull_url', {})
+            flv_episodes = []
+            for k, v in flv_pull.items():
+                name = resolution_map.get(k, k)
+                flv_episodes.append(f"{name}$douyin@@{v}")
+
+            hls_pull = info.get('stream_url', {}).get('hls_pull_url_map', {})
+            hls_episodes = []
+            for k, v in hls_pull.items():
+                name = resolution_map.get(k, k)
+                hls_episodes.append(f"{name}$douyin@@{v}")
+
+            vod_play_from = ""
+            vod_play_url = ""
+            if flv_episodes:
+                vod_play_from += "FLV$$$"
+                vod_play_url += "#".join(flv_episodes) + "$$$"
+            if hls_episodes:
+                vod_play_from += "HLS"
+                vod_play_url += "#".join(hls_episodes)
+
+            vod_play_from = vod_play_from.rstrip("$$$")
+            vod_play_url = vod_play_url.rstrip("$$$")
+
+            vod = self.buildvod(
+                vod_name=info['title'],
+                vod_pic=info['cover']['url_list'][0],
+                vod_actor=info['owner']['nickname'],
+                vod_content=info['title'],
+                vod_play_from=vod_play_from,
+                vod_play_url=vod_play_url
+            )
+            return vod
+        except Exception as e:
+            print(f"抖音详情错误: {e}")
             return self.handle_exception(e)
 
     def huyaDetail(self, ids):
@@ -807,6 +973,8 @@ class Spider(Spider):
                 p, url = self.huyaplay(ids)
             elif ids[0] == 'douyu':
                 p, url = self.douyuplay(ids)
+            elif ids[0] == 'douyin':
+                p, url = 0, ids[1] if len(ids) > 1 else id
             return {'parse': p, 'url': url, 'header': self.playheaders[ids[0]]}
         except Exception as e:
             return {'parse': 1, 'url': self.excepturl, 'header': self.headers[0]}
@@ -860,6 +1028,50 @@ class Spider(Spider):
         except Exception as e:
             print(f"斗鱼播放解析错误: {e}")
             return 1, self.excepturl
+
+    # ==================== 抖音辅助方法 ====================
+
+    def _generate_device_id(self):
+        timestamp = self._base36_encode(int(time.time() * 1000))
+        random_part = ''.join(random.choices(string.ascii_lowercase + string.digits, k=13))
+        return f"{timestamp}{random_part}"
+
+    @staticmethod
+    def _base36_encode(num):
+        alphabet = '0123456789abcdefghijklmnopqrstuvwxyz'
+        if num == 0:
+            return '0'
+        res = []
+        while num > 0:
+            num, rem = divmod(num, 36)
+            res.append(alphabet[rem])
+        return ''.join(reversed(res))
+
+    def _get_douyin_cookie(self):
+        if self.dy_cookie_cache:
+            return self.dy_cookie_cache
+        try:
+            resp = self.fetch(self.hosts['douyin'], headers=self.headers[0], verify=False)
+            cookies = resp.headers.get('set-cookie', '')
+            if cookies:
+                match = re.search(r'ttwid=([^;]+)', cookies)
+                if match:
+                    self.dy_cookie_cache = f"ttwid={match.group(1)}"
+        except Exception:
+            pass
+        return self.dy_cookie_cache
+
+    def _get_douyin_headers(self):
+        cookie = self._get_douyin_cookie()
+        hd = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+            "Accept": "application/json, text/plain, */*",
+            "Accept-Language": "zh-CN,zh;q=0.9",
+            "Referer": self.hosts['douyin']
+        }
+        if cookie:
+            hd["Cookie"] = cookie
+        return hd
 
     def localProxy(self, param):
         pass
