@@ -51,23 +51,27 @@ class Spider(Spider):
     excepturl = 'https://www.baidu.com'
 
     hosts = {
+        "kuaishou": "https://live.kuaishou.com",
         "huya": ["https://www.huya.com", "https://mp.huya.com"],
         "douyu": "https://www.douyu.com",
         "wangyi": "https://cc.163.com",
         "bili": ["https://api.live.bilibili.com", "https://api.bilibili.com"],
-        "douyin": "https://live.douyin.com",
-        "kuaishou": "https://live.kuaishou.com"
+        "douyin": "https://live.douyin.com"
     }
 
     referers = {
+        "kuaishou": "https://live.kuaishou.com",
         "huya": "https://live.cdn.huya.com",
         "douyu": "https://m.douyu.com",
         "bili": "https://live.bilibili.com",
-        "douyin": "https://live.douyin.com",
-        "kuaishou": "https://live.kuaishou.com"
+        "douyin": "https://live.douyin.com"
     }
 
     playheaders = {
+        'kuaishou': {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+            'Referer': 'https://live.kuaishou.com'
+        },
         "wangyi": {
             "User-Agent": "ExoPlayer",
             "Connection": "Keep-Alive",
@@ -89,10 +93,6 @@ class Spider(Spider):
         'douyin': {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
             'Referer': 'https://live.douyin.com'
-        },
-        'kuaishou': {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-            'Referer': 'https://live.kuaishou.com'
         }
     }
 
@@ -144,15 +144,15 @@ class Spider(Spider):
                                         {'n': '体育', 'v': 'sports'},
                                         {'n': '购物', 'v': 'shopping'}]}])
 
-    def homeContent(self, filter):
+    def process_bili(self):
         result = {}
         cateManual = {
+            "快手": "kuaishou",
             "虎牙": "huya",
             "斗鱼": "douyu",
             "网易": "wangyi",
             "B站": "bili",
-            "抖音": "douyin",
-            "快手": "kuaishou"
+            "抖音": "douyin"
         }
         classes = []
         filters = {
@@ -163,10 +163,10 @@ class Spider(Spider):
 
         with ThreadPoolExecutor(max_workers=4) as executor:
             futures = {
+                executor.submit(self.process_kuaishou): 'kuaishou',
                 executor.submit(self.process_bili): 'bili',
                 executor.submit(self.process_douyu): 'douyu',
-                executor.submit(self.process_douyin): 'douyin',
-                executor.submit(self.process_kuaishou): 'kuaishou'
+                executor.submit(self.process_douyin): 'douyin'
             }
 
             for future in futures:
@@ -196,6 +196,8 @@ class Spider(Spider):
         result['total'] = 999999
         if tid == 'wangyi':
             vdata, pagecount = self.wyccContent(tid, pg, filter, extend, vdata)
+        elif 'kuaishou' in tid:
+            vdata, pagecount = self.kuaishouContent(tid, pg, filter, extend, vdata)
         elif 'bili' in tid:
             vdata, pagecount = self.biliContent(tid, pg, filter, extend, vdata)
         elif 'huya' in tid:
@@ -345,80 +347,101 @@ class Spider(Spider):
             ks_headers = {
                 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
                 'Referer': 'https://live.kuaishou.com/',
-                'Accept': 'application/json, text/plain, */*'
+                'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
             }
 
-            # 先获取首页拿到cookie
-            try:
-                home_resp = self.fetch('https://live.kuaishou.com/', headers=ks_headers)
-                if home_resp.headers.get('set-cookie'):
-                    ks_cookies = home_resp.headers.get('set-cookie')
-                    did_match = re.search(r'kuaishou.live.st=([^;]+)', ks_cookies)
-                    if did_match:
-                        ks_headers['Cookie'] = f"kuaishou.live.st={did_match.group(1)}"
-            except Exception:
-                pass
+            if tag == 'hot':
+                page_url = 'https://live.kuaishou.com/'
+            else:
+                page_url = f'https://live.kuaishou.com/tag/{tag}'
 
-            # 使用快手 API 获取直播列表
-            api_url = 'https://live.kuaishou.com/live_api'
-            params = {
-                'tag': tag,
-                'page': page,
-                'count': 20,
-            }
+            resp = requests.get(page_url, headers=ks_headers, timeout=15)
+            if resp.status_code != 200:
+                return vdata, 1
 
-            try:
-                resp = self.fetch(api_url, headers=ks_headers, params=params, verify=False)
-                data = resp.json()
-                if data.get('result') == 1 and data.get('feeds'):
-                    for feed in data['feeds']:
-                        live_info = feed.get('live_info') or feed.get('live_stream', {})
-                        if not live_info:
-                            continue
-                        user_id = live_info.get('user_id') or live_info.get('id_str', '')
-                        if not user_id:
-                            continue
-                        nick = live_info.get('user_name') or live_info.get('nickname', '')
-                        title = live_info.get('caption') or live_info.get('title', nick)
-                        cover = live_info.get('cover_url') or live_info.get('cover', '')
-                        watching = live_info.get('watching_count') or live_info.get('user_count', 0)
+            soup = BeautifulSoup(resp.text, 'lxml')
+            scripts = soup.find_all('script')
 
-                        v = self.buildvod(
-                            vod_id=f"kuaishou@@{user_id}",
-                            vod_name=title,
-                            vod_pic=cover,
-                            vod_remarks=f"{nick} (观看:{watching})",
-                            style={"type": "rect", "ratio": 1.33}
-                        )
-                        vdata.append(v)
-                    return vdata, 9999
-            except Exception:
-                pass
+            # Strategy 1: 从页面嵌入式 JSON 中提取
+            rooms = []
+            for script in scripts:
+                text = script.string
+                if not text:
+                    continue
+                for pattern in [r'window\.__INITIAL_STATE__\s*=\s*({.*?});',
+                                r'window\.__NUXT__\s*=\s*({.*?});']:
+                    match = re.search(pattern, text, re.DOTALL)
+                    if not match:
+                        continue
+                    try:
+                        jdata = json.loads(match.group(1))
+                        candidates = []
+                        # 尝试多种可能的 JSON 路径
+                        for path in [['liveroom', 'liveStream', 'feeds'],
+                                     ['feeds'], ['liveRooms'],
+                                     ['data', 'list'], ['data', 'rooms'],
+                                     ['props', 'pageProps', 'list']]:
+                            cur = jdata
+                            found = True
+                            for key in path:
+                                if isinstance(cur, dict) and key in cur:
+                                    cur = cur[key]
+                                else:
+                                    found = False
+                                    break
+                            if found and isinstance(cur, list):
+                                candidates = cur
+                                break
+                        for item in candidates:
+                            if isinstance(item, dict):
+                                user_id = (item.get('user_id') or item.get('id_str') or
+                                           item.get('userId') or item.get('author', {}).get('id', ''))
+                                if not user_id:
+                                    continue
+                                nick = (item.get('user_name') or item.get('nickname') or
+                                        item.get('author', {}).get('name', user_id))
+                                title = (item.get('caption') or item.get('title') or nick)
+                                cover = (item.get('cover_url') or item.get('cover') or
+                                         item.get('coverUrl', ''))
+                                watching = (item.get('watching_count') or item.get('user_count') or
+                                            item.get('watchingCount', 0))
+                                rooms.append((str(user_id), str(nick), str(title), str(cover), str(watching)))
+                    except Exception:
+                        continue
 
-            # 降级: 尝试解析页面HTML
-            try:
-                page_url = f'https://live.kuaishou.com/'
-                if tag != 'hot':
-                    page_url = f'https://live.kuaishou.com/tag/{tag}'
-                resp = self.fetch(page_url, headers=ks_headers)
-                doc = BeautifulSoup(resp.text, 'lxml')
+            if rooms:
+                for user_id, nick, title, cover, watching in rooms:
+                    v = self.buildvod(
+                        vod_id=f"kuaishou@@{user_id}",
+                        vod_name=title,
+                        vod_pic=cover,
+                        vod_remarks=f"{nick} (观看:{watching})",
+                        style={"type": "rect", "ratio": 1.33}
+                    )
+                    vdata.append(v)
+                return vdata, 9999
 
-                for card in doc.find_all('div', class_='live-card') or doc.find_all('a', href=re.compile(r'/u/')):
-                    link = card.get('href') if card.name == 'a' else ''
-                    if not link:
+            # Strategy 2: HTML 解析 (针对非 SPA 页面)
+            for selector in [('div', {'class': 'live-card'}),
+                             ('a', {'href': re.compile(r'/u/')}),
+                             ('div', {'class': re.compile(r'live')}),
+                             ('li', {'class': re.compile(r'live')})]:
+                cards = soup.find_all(selector[0], selector[1])
+                if not cards:
+                    continue
+                for card in cards:
+                    if card.name == 'a':
+                        link = card.get('href', '')
+                    else:
                         a_tag = card.find('a', href=re.compile(r'/u/'))
-                        if a_tag:
-                            link = a_tag.get('href', '')
-                    if not link:
+                        link = a_tag.get('href', '') if a_tag else ''
+                    if not link or '/u/' not in link:
                         continue
-                    user_id = link.split('/u/')[-1].split('?')[0] if '/u/' in link else ''
-                    if not user_id:
-                        continue
-                    name_el = card.find('h3') or card.find('p', class_='name')
+                    user_id = link.split('/u/')[-1].split('?')[0]
+                    name_el = card.find('h3') or card.find('p', class_='name') or card.find('span', class_='name')
                     name = name_el.text.strip() if name_el else user_id
                     pic_el = card.find('img')
                     pic = pic_el.get('src', '') if pic_el else ''
-
                     v = self.buildvod(
                         vod_id=f"kuaishou@@{user_id}",
                         vod_name=name,
@@ -427,9 +450,8 @@ class Spider(Spider):
                         style={"type": "rect", "ratio": 1.33}
                     )
                     vdata.append(v)
-                return vdata, 9999
-            except Exception:
-                pass
+                if vdata:
+                    return vdata, 9999
 
             return vdata, 1
         except Exception as e:
@@ -512,6 +534,8 @@ class Spider(Spider):
         ids = ids[0].split('@@')
         if ids[0] == 'wangyi':
             vod = self.wyccDetail(ids)
+        elif ids[0] == 'kuaishou':
+            vod = self.kuaishouDetail(ids)
         elif ids[0] == 'bili':
             vod = self.biliDetail(ids)
         elif ids[0] == 'huya':
@@ -520,8 +544,6 @@ class Spider(Spider):
             vod = self.douyuDetail(ids)
         elif ids[0] == 'douyin':
             vod = self.douyinDetail(ids)
-        elif ids[0] == 'kuaishou':
-            vod = self.kuaishouDetail(ids)
         return {'list': [vod]}
 
     def wyccDetail(self, ids):
@@ -1192,6 +1214,8 @@ class Spider(Spider):
             p = 1
             if ids[0] in ['wangyi']:
                 p, url = 0, json.loads(self.d64(ids[1]))
+            elif ids[0] == 'kuaishou':
+                p, url = 0, ids[1] if len(ids) > 1 else id
             elif ids[0] == 'bili':
                 p, url = 0, ids[1] if len(ids) > 1 else id
             elif ids[0] == 'huya':
@@ -1199,8 +1223,6 @@ class Spider(Spider):
             elif ids[0] == 'douyu':
                 p, url = self.douyuplay(ids)
             elif ids[0] == 'douyin':
-                p, url = 0, ids[1] if len(ids) > 1 else id
-            elif ids[0] == 'kuaishou':
                 p, url = 0, ids[1] if len(ids) > 1 else id
             return {'parse': p, 'url': url, 'header': self.playheaders[ids[0]]}
         except Exception as e:
