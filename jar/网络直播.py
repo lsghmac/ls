@@ -90,15 +90,6 @@ class Spider(Spider):
         }
     }
 
-    def process_bili(self):
-        return ('bili', [{'key': 'cate', 'name': '分类',
-                          'value': [{'n': '舞蹈', 'v': '舞'}, {'n': '音乐', 'v': '音乐'},
-                                    {'n': '手游', 'v': '手游'}, {'n': '网游', 'v': '网游'},
-                                    {'n': '单机游戏', 'v': '单机游戏'}, {'n': '虚拟主播', 'v': '虚拟主播'},
-                                    {'n': '电台', 'v': '电台'}, {'n': '体育', 'v': '体育'},
-                                    {'n': '聊天', 'v': '聊天'}, {'n': '娱乐', 'v': '娱乐'},
-                                    {'n': '影视', 'v': '电影'}, {'n': '新闻', 'v': '新闻'}]}])
-
     def process_douyu(self):
         try:
             self.dyufdata = self.fetch(
@@ -112,27 +103,34 @@ class Spider(Spider):
             print(f"douyu错误: {e}")
             return 'douyu', None
 
-    def process_douyin(self):
-        return ('douyin', [{'key': 'cate', 'name': '分类',
-                            'value': [{'n': '娱乐天地', 'v': '10000$3'},
-                                      {'n': '科技文化', 'v': '10001$3'},
-                                      {'n': '音乐', 'v': '102$4'},
-                                      {'n': '游戏', 'v': '103$4'},
-                                      {'n': '舞蹈', 'v': '105$4'},
-                                      {'n': '聊天', 'v': '101$4'},
-                                      {'n': '运动', 'v': '108$4'},
-                                      {'n': '生活', 'v': '107$4'},
-                                      {'n': '文化', 'v': '106$4'},
-                                      {'n': '二次元', 'v': '104$4'}]}])
-
     def homeContent(self, filter):
         result = {}
         cateManual = {
             "虎牙": "huya",
             "斗鱼": "douyu",
             "网易": "wangyi",
-            "B站": "bili",
-            "抖音": "douyin"
+            "B站-舞蹈": "bili-舞",
+            "B站-音乐": "bili-音乐",
+            "B站-手游": "bili-手游",
+            "B站-网游": "bili-网游",
+            "B站-单机游戏": "bili-单机游戏",
+            "B站-虚拟主播": "bili-虚拟主播",
+            "B站-电台": "bili-电台",
+            "B站-体育": "bili-体育",
+            "B站-聊天": "bili-聊天",
+            "B站-娱乐": "bili-娱乐",
+            "B站-影视": "bili-电影",
+            "B站-新闻": "bili-新闻",
+            "抖音-娱乐天地": "douyin-10000$3",
+            "抖音-科技文化": "douyin-10001$3",
+            "抖音-音乐": "douyin-102$4",
+            "抖音-游戏": "douyin-103$4",
+            "抖音-舞蹈": "douyin-105$4",
+            "抖音-聊天": "douyin-101$4",
+            "抖音-运动": "douyin-108$4",
+            "抖音-生活": "douyin-107$4",
+            "抖音-文化": "douyin-106$4",
+            "抖音-二次元": "douyin-104$4"
         }
         classes = []
         filters = {
@@ -141,11 +139,9 @@ class Spider(Spider):
                                 {'n': '娱乐', 'v': '8'}, {'n': '手游', 'v': '3'}]}]
         }
 
-        with ThreadPoolExecutor(max_workers=4) as executor:
+        with ThreadPoolExecutor(max_workers=2) as executor:
             futures = {
-                executor.submit(self.process_bili): 'bili',
-                executor.submit(self.process_douyu): 'douyu',
-                executor.submit(self.process_douyin): 'douyin'
+                executor.submit(self.process_douyu): 'douyu'
             }
 
             for future in futures:
@@ -208,8 +204,8 @@ class Spider(Spider):
 
     def biliContent(self, tid, pg, filter, extend, vdata):
         try:
-            cid = extend.get('cate', tid) if extend else tid
-            url = f'https://search.bilibili.com/live?keyword={cid}&page={pg}'
+            keyword = tid.split('-', 1)[1] if '-' in tid else tid
+            url = f'https://search.bilibili.com/live?keyword={keyword}&page={pg}'
 
             req_headers = {
                 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36 Edg/129.0.0.0',
@@ -251,7 +247,7 @@ class Spider(Spider):
 
     def douyinContent(self, tid, pg, filter, extend, vdata):
         try:
-            cid = extend.get('cate', '10000$3') if extend else '10000$3'
+            cid = tid.split('-', 1)[1] if '-' in tid else '10000$3'
             page = int(pg or 1)
             offset = 15 * (page - 1)
             parts = cid.split('$')
@@ -450,30 +446,31 @@ class Spider(Spider):
             data = self.fetch(url, headers=self.headers[0]).json()
 
             content = '欢迎观看哔哩直播'
-            vod = self.buildvod(vod_name='B站直播', vod_content=content)
 
             setup = data['data']['playurl_info']['playurl']['stream']
 
             bofang = ''
-            xianlu = ''
             nam = 0
-            for stream in setup:
+            for vod in setup:
                 try:
-                    host = stream['format'][nam]['codec'][0]['url_info'][1]['host']
-                    base = stream['format'][nam]['codec'][0]['base_url']
-                    extra = stream['format'][nam]['codec'][0]['url_info'][1]['extra']
-                    url = host + base + extra
-                    nam += 1
-                    bofang += f'{nam}号线路$bili@@{url}#'
+                    host = vod['format'][nam]['codec'][0]['url_info'][1]['host']
                 except (KeyError, IndexError):
                     continue
+                base = vod['format'][nam]['codec'][0]['base_url']
+                extra = vod['format'][nam]['codec'][0]['url_info'][1]['extra']
+                stream_url = host + base + extra
+                nam += 1
+                bofang += f'{nam}号线路${stream_url}#'
 
-            if bofang:
-                bofang = bofang[:-1]
-            xianlu = '哔哩专线'
+            bofang = bofang[:-1]
 
-            vod['vod_play_from'] = xianlu
-            vod['vod_play_url'] = bofang
+            vod = self.buildvod(
+                vod_id=room_id,
+                vod_name='B站直播',
+                vod_content=content,
+                vod_play_from='哔哩专线',
+                vod_play_url=bofang
+            )
             return vod
 
         except Exception as e:
@@ -963,12 +960,12 @@ class Spider(Spider):
 
     def playerContent(self, flag, id, vipFlags):
         try:
+            if flag == '哔哩专线':
+                return {'parse': 0, 'url': id, 'header': self.playheaders['bili']}
             ids = id.split('@@')
             p = 1
             if ids[0] in ['wangyi']:
                 p, url = 0, json.loads(self.d64(ids[1]))
-            elif ids[0] == 'bili':
-                p, url = 0, ids[1] if len(ids) > 1 else id
             elif ids[0] == 'huya':
                 p, url = self.huyaplay(ids)
             elif ids[0] == 'douyu':
