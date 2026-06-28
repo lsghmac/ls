@@ -144,7 +144,7 @@ class Spider(Spider):
                                         {'n': '体育', 'v': 'sports'},
                                         {'n': '购物', 'v': 'shopping'}]}])
 
-    def process_bili(self):
+    def homeContent(self, filter):
         result = {}
         cateManual = {
             "快手": "kuaishou",
