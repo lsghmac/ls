@@ -350,58 +350,6 @@ class Spider(Spider):
                 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
             }
 
-            # Strategy 1: API 方式 (多种端点)
-            api_configs = [
-                ('https://live.kuaishou.com/live_api', {'tag': tag, 'page': page, 'count': 20}, 'get'),
-                ('https://live.kuaishou.com/live_api', {'tag': tag, 'page': page, 'pageSize': 20}, 'get'),
-                ('https://live.kuaishou.com/m_api/feed/live', {'tag': tag, 'page': page}, 'get'),
-                ('https://live.kuaishou.com/m_api/live/explore', {'type': tag, 'page': page}, 'get'),
-            ]
-
-            for api_url, api_params, method in api_configs:
-                try:
-                    api_headers = ks_headers.copy()
-                    api_headers['Accept'] = 'application/json, text/plain, */*'
-                    if method == 'post':
-                        resp = requests.post(api_url, json=api_params, headers=api_headers, timeout=10)
-                    else:
-                        resp = requests.get(api_url, params=api_params, headers=api_headers, timeout=10)
-                    data = resp.json()
-                    # 尝试多种可能的返回值路径
-                    feeds = (data.get('feeds') or data.get('data', {}).get('feeds') or
-                             data.get('data', {}).get('list') or data.get('list') or
-                             data.get('result') if isinstance(data.get('result'), list) else None)
-                    if feeds and isinstance(feeds, list):
-                        for feed in feeds:
-                            live_info = (feed.get('live_info') or feed.get('live_stream') or
-                                         feed.get('liveStream') or feed)
-                            if not isinstance(live_info, dict):
-                                continue
-                            user_id = (live_info.get('user_id') or live_info.get('id_str') or
-                                       live_info.get('userId') or live_info.get('id'))
-                            if not user_id:
-                                continue
-                            nick = (live_info.get('user_name') or live_info.get('nickname') or
-                                    live_info.get('userName'))
-                            title = (live_info.get('caption') or live_info.get('title') or nick or '')
-                            cover = (live_info.get('cover_url') or live_info.get('cover') or
-                                     live_info.get('coverUrl', ''))
-                            watching = (live_info.get('watching_count') or live_info.get('user_count') or
-                                        live_info.get('watchingCount', 0))
-                            v = self.buildvod(
-                                vod_id=f"kuaishou@@{user_id}",
-                                vod_name=str(title),
-                                vod_pic=str(cover),
-                                vod_remarks=f"{nick} (观看:{watching})",
-                                style={"type": "rect", "ratio": 1.33}
-                            )
-                            vdata.append(v)
-                        if vdata:
-                            return vdata, 9999
-                except Exception:
-                    continue
-
-            # Strategy 2: 从页面嵌入式 JSON 中提取 (带括号计数)
             if tag == 'hot':
                 page_url = 'https://live.kuaishou.com/'
             else:
@@ -411,159 +359,54 @@ class Spider(Spider):
             if resp.status_code != 200:
                 return vdata, 1
 
-            soup = BeautifulSoup(resp.text, 'lxml')
-            scripts = soup.find_all('script')
+            # 从页面提取 __INITIAL_STATE__ JSON
+            match = re.search(r'window\.__INITIAL_STATE__\s*=\s*', resp.text)
+            if not match:
+                return vdata, 1
 
-            def extract_json_after_prefix(text, prefix):
-                idx = text.find(prefix)
-                if idx < 0:
-                    return None
-                start = idx + len(prefix)
-                if start >= len(text) or text[start] != '{':
-                    return None
-                brace = 0
-                for i in range(start, len(text)):
-                    if text[i] == '{':
-                        brace += 1
-                    elif text[i] == '}':
-                        brace -= 1
-                        if brace == 0:
-                            try:
-                                return json.loads(text[start:i+1])
-                            except Exception:
-                                return None
-                return None
+            start = match.end()
+            if start >= len(resp.text) or resp.text[start] != '{':
+                return vdata, 1
 
-            def extract_rooms_from_json(jdata):
-                candidates = []
-                for path in [['liveroom', 'liveStream', 'feeds'],
-                             ['feeds'], ['liveRooms'], ['roomList'],
-                             ['data', 'list'], ['data', 'rooms'],
-                             ['props', 'pageProps', 'list'],
-                             ['data', 'data', 'list'],
-                             ['data', 'data', 'feeds']]:
-                    cur = jdata
-                    found = True
-                    for key in path:
-                        if isinstance(cur, dict) and key in cur:
-                            cur = cur[key]
-                        else:
-                            found = False
-                            break
-                    if found and isinstance(cur, list):
-                        candidates = cur
-                        break
-                if not candidates and isinstance(jdata, list):
-                    candidates = jdata
-                results = []
-                for item in candidates:
-                    if not isinstance(item, dict):
-                        continue
-                    live_info = (item.get('live_info') or item.get('live_stream') or
-                                 item.get('liveStream') or item)
-                    if not isinstance(live_info, dict):
-                        live_info = item
-                    user_id = (live_info.get('user_id') or live_info.get('id_str') or
-                               live_info.get('userId') or live_info.get('id'))
-                    if not user_id:
-                        continue
-                    nick = (live_info.get('user_name') or live_info.get('nickname') or
-                            live_info.get('userName'))
-                    title = (live_info.get('caption') or live_info.get('title') or nick or '')
-                    cover = (live_info.get('cover_url') or live_info.get('cover') or
-                             live_info.get('coverUrl', ''))
-                    watching = (live_info.get('watching_count') or live_info.get('user_count') or
-                                live_info.get('watchingCount', 0))
-                    results.append((str(user_id), str(nick or ''), str(title), str(cover or ''), str(watching)))
-                return results
-
-            rooms = []
-            found_keywords = ['__INITIAL_STATE__', '__NUXT__', '__NEXT_DATA__', '__DATA__', 'pageData', 'initialState']
-            for script in scripts:
-                text = script.string
-                if not text or len(text) < 200:
-                    continue
-                for kw in found_keywords:
-                    prefix = f'window.{kw}='
-                    jdata = extract_json_after_prefix(text, prefix)
-                    if jdata:
-                        rooms = extract_rooms_from_json(jdata)
-                        if rooms:
-                            break
-                if rooms:
-                    break
-
-            if not rooms:
-                for script in scripts:
-                    text = script.string
-                    if not text or len(text) < 500:
-                        continue
-                    if 'live' in text.lower() or 'room' in text.lower():
-                        prefix = '='
-                        start = text.find('{')
-                        if start >= 0:
-                            brace = 0
-                            for i in range(start, len(text)):
-                                if text[i] == '{':
-                                    brace += 1
-                                elif text[i] == '}':
-                                    brace -= 1
-                                    if brace == 0:
-                                        try:
-                                            jdata = json.loads(text[start:i+1])
-                                            rooms = extract_rooms_from_json(jdata)
-                                            if rooms:
-                                                break
-                                        except Exception:
-                                            pass
-                    if rooms:
+            brace = 0
+            json_end = start
+            for i in range(start, len(resp.text)):
+                if resp.text[i] == '{':
+                    brace += 1
+                elif resp.text[i] == '}':
+                    brace -= 1
+                    if brace == 0:
+                        json_end = i + 1
                         break
 
-            if rooms:
-                for user_id, nick, title, cover, watching in rooms:
-                    v = self.buildvod(
-                        vod_id=f"kuaishou@@{user_id}",
-                        vod_name=title,
-                        vod_pic=cover,
-                        vod_remarks=f"{nick} (观看:{watching})",
-                        style={"type": "rect", "ratio": 1.33}
-                    )
-                    vdata.append(v)
-                return vdata, 9999
+            init_state = json.loads(resp.text[start:json_end])
+            live_streams = init_state.get('home', {}).get('homeLiveStream', [])
 
-            # Strategy 3: HTML 解析
-            for selector in [('a', {'href': re.compile(r'/u/')}),
-                             ('div', {'class': 'live-card'}),
-                             ('div', {'class': re.compile(r'live')}),
-                             ('li', {'class': re.compile(r'live')})]:
-                cards = soup.find_all(selector[0], selector[1])
-                if not cards:
+            if not isinstance(live_streams, list) or not live_streams:
+                return vdata, 1
+
+            for item in live_streams:
+                if not isinstance(item, dict):
                     continue
-                for card in cards:
-                    if card.name == 'a':
-                        link = card.get('href', '')
-                    else:
-                        a_tag = card.find('a', href=re.compile(r'/u/'))
-                        link = a_tag.get('href', '') if a_tag else ''
-                    if not link or '/u/' not in link:
-                        continue
-                    user_id = link.split('/u/')[-1].split('?')[0]
-                    name_el = card.find('h3') or card.find('p', class_='name') or card.find('span', class_='name')
-                    name = name_el.text.strip() if name_el else user_id
-                    pic_el = card.find('img')
-                    pic = pic_el.get('src', '') if pic_el else ''
-                    v = self.buildvod(
-                        vod_id=f"kuaishou@@{user_id}",
-                        vod_name=name,
-                        vod_pic=pic,
-                        vod_remarks='快手直播',
-                        style={"type": "rect", "ratio": 1.33}
-                    )
-                    vdata.append(v)
-                if vdata:
-                    return vdata, 9999
+                author = item.get('author', {}) or {}
+                user_id = author.get('id', '') or item.get('id', '')
+                if not user_id:
+                    continue
+                nick = author.get('name', '') or ''
+                title = item.get('caption', '') or nick or ''
+                cover = item.get('poster', '') or ''
+                watching = item.get('watchingCount', 0)
 
-            return vdata, 1
+                v = self.buildvod(
+                    vod_id=f"kuaishou@@{user_id}",
+                    vod_name=str(title),
+                    vod_pic=str(cover),
+                    vod_remarks=f"{nick} (观看:{watching})",
+                    style={"type": "rect", "ratio": 1.33}
+                )
+                vdata.append(v)
+
+            return vdata, 9999
         except Exception as e:
             print(f"快手内容获取错误: {e}")
             return vdata, 1
