@@ -132,17 +132,7 @@ class Spider(Spider):
                                       {'n': '二次元', 'v': '104$4'}]}])
 
     def process_kuaishou(self):
-        return ('kuaishou', [{'key': 'cate', 'name': '分类',
-                              'value': [{'n': '热门', 'v': 'hot'},
-                                        {'n': '游戏', 'v': 'game'},
-                                        {'n': '才艺', 'v': 'talent'},
-                                        {'n': '二次元', 'v': 'acg'},
-                                        {'n': '音乐', 'v': 'music'},
-                                        {'n': '知识', 'v': 'knowledge'},
-                                        {'n': '户外', 'v': 'outdoor'},
-                                        {'n': '美食', 'v': 'food'},
-                                        {'n': '体育', 'v': 'sports'},
-                                        {'n': '购物', 'v': 'shopping'}]}])
+        return ('kuaishou', None)
 
     def homeContent(self, filter):
         result = {}
@@ -206,8 +196,6 @@ class Spider(Spider):
             vdata, pagecount = self.douyuContent(tid, pg, filter, extend, vdata)
         elif 'douyin' in tid:
             vdata, pagecount = self.douyinContent(tid, pg, filter, extend, vdata)
-        elif 'kuaishou' in tid:
-            vdata, pagecount = self.kuaishouContent(tid, pg, filter, extend, vdata)
         result['list'] = vdata
         result['pagecount'] = pagecount
         return result
@@ -341,21 +329,16 @@ class Spider(Spider):
 
     def kuaishouContent(self, tid, pg, filter, extend, vdata):
         try:
-            tag = extend.get('cate', '') if extend else ''
-            page = int(pg or 1)
-
             ks_headers = {
                 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
                 'Referer': 'https://live.kuaishou.com/',
                 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
             }
 
-            # 始终从首页获取直播列表 (tag 页面无嵌入数据)
-            resp = requests.get('https://live.kuaishou.com/', headers=ks_headers, timeout=15)
+            resp = requests.get('https://live.kuaishou.com/', headers=ks_headers, timeout=15, verify=False)
             if resp.status_code != 200:
                 return vdata, 1
 
-            # 提取 __INITIAL_STATE__ JSON
             match = re.search(r'window\.__INITIAL_STATE__\s*=\s*', resp.text)
             if not match:
                 return vdata, 1
