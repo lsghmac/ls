@@ -341,7 +341,7 @@ class Spider(Spider):
 
     def kuaishouContent(self, tid, pg, filter, extend, vdata):
         try:
-            tag = extend.get('cate', 'hot') if extend else 'hot'
+            tag = extend.get('cate', '') if extend else ''
             page = int(pg or 1)
 
             ks_headers = {
@@ -350,16 +350,12 @@ class Spider(Spider):
                 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
             }
 
-            if tag == 'hot':
-                page_url = 'https://live.kuaishou.com/'
-            else:
-                page_url = f'https://live.kuaishou.com/tag/{tag}'
-
-            resp = requests.get(page_url, headers=ks_headers, timeout=15)
+            # 始终从首页获取直播列表 (tag 页面无嵌入数据)
+            resp = requests.get('https://live.kuaishou.com/', headers=ks_headers, timeout=15)
             if resp.status_code != 200:
                 return vdata, 1
 
-            # 从页面提取 __INITIAL_STATE__ JSON
+            # 提取 __INITIAL_STATE__ JSON
             match = re.search(r'window\.__INITIAL_STATE__\s*=\s*', resp.text)
             if not match:
                 return vdata, 1
