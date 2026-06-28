@@ -314,22 +314,6 @@
       "ext": "https://qpcj.69mini.com/api.php/app/"
     },
     {
-      "key": "金牌",
-      "name": "金牌❤❌APP",
-      "type": 3,
-      "api": "csp_AppQi",
-      "searchable": 1,
-      "changeable": 1,
-      "ext": {
-        "url": "https://qj4.catbb.xyz",
-        "dataKey": "eecbio48dsq13kkk",
-        "dataIv": "eecbio48dsq13kkk",
-        "search": "searchList4",
-        "init": "initV122",
-        "ua": "okhttp/3.10.0"
-      }
-    },
-    {
       "key": "王子",
       "name": "王子｜APP",
       "type": 3,
