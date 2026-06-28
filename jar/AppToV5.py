@@ -141,8 +141,7 @@ class Spider(Spider):
         home_cate = config['get_home_cate']
         classes = []
         for i in home_cate:
-            if isinstance(i.get('extend', []),dict):
-                classes.append({'type_id': i['cate'], 'type_name': i['title']})
+            classes.append({'type_id': i['cate'], 'type_name': i['title']})
         return {'class': classes}
 
     def homeVideoContent(self):
@@ -163,7 +162,8 @@ class Spider(Spider):
         return {'list': vod_list}
 
     def categoryContent(self, tid, pg, filter, extend):
-        response = self.fetch(f"{self.host}/apptov5/v1/vod/lists?area={extend.get('area','')}&lang={extend.get('lang','')}&year={extend.get('year','')}&order={extend.get('sort','time')}&type_id={tid}&type_name=&page={pg}&pageSize=21&__platform=android", headers=self.headers).json()
+        ext = extend or {}
+        response = self.fetch(f"{self.host}/apptov5/v1/vod/lists?area={ext.get('area','')}&lang={ext.get('lang','')}&year={ext.get('year','')}&order={ext.get('sort','time')}&type_id={tid}&type_name=&page={pg}&pageSize=21&__platform=android", headers=self.headers).json()
         data = response['data']
         data2 = data['data']
         for i in data['data']:
