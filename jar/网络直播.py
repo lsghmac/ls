@@ -141,7 +141,7 @@ class Spider(Spider):
                                 {'n': '娱乐', 'v': '8'}, {'n': '手游', 'v': '3'}]}]
         }
 
-        with ThreadPoolExecutor(max_workers=3) as executor:
+        with ThreadPoolExecutor(max_workers=4) as executor:
             futures = {
                 executor.submit(self.process_bili): 'bili',
                 executor.submit(self.process_douyu): 'douyu',
