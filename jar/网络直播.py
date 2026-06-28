@@ -350,6 +350,58 @@ class Spider(Spider):
                 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
             }
 
+            # Strategy 1: API 方式 (多种端点)
+            api_configs = [
+                ('https://live.kuaishou.com/live_api', {'tag': tag, 'page': page, 'count': 20}, 'get'),
+                ('https://live.kuaishou.com/live_api', {'tag': tag, 'page': page, 'pageSize': 20}, 'get'),
+                ('https://live.kuaishou.com/m_api/feed/live', {'tag': tag, 'page': page}, 'get'),
+                ('https://live.kuaishou.com/m_api/live/explore', {'type': tag, 'page': page}, 'get'),
+            ]
+
+            for api_url, api_params, method in api_configs:
+                try:
+                    api_headers = ks_headers.copy()
+                    api_headers['Accept'] = 'application/json, text/plain, */*'
+                    if method == 'post':
+                        resp = requests.post(api_url, json=api_params, headers=api_headers, timeout=10)
+                    else:
+                        resp = requests.get(api_url, params=api_params, headers=api_headers, timeout=10)
+                    data = resp.json()
+                    # 尝试多种可能的返回值路径
+                    feeds = (data.get('feeds') or data.get('data', {}).get('feeds') or
+                             data.get('data', {}).get('list') or data.get('list') or
+                             data.get('result') if isinstance(data.get('result'), list) else None)
+                    if feeds and isinstance(feeds, list):
+                        for feed in feeds:
+                            live_info = (feed.get('live_info') or feed.get('live_stream') or
+                                         feed.get('liveStream') or feed)
+                            if not isinstance(live_info, dict):
+                                continue
+                            user_id = (live_info.get('user_id') or live_info.get('id_str') or
+                                       live_info.get('userId') or live_info.get('id'))
+                            if not user_id:
+                                continue
+                            nick = (live_info.get('user_name') or live_info.get('nickname') or
+                                    live_info.get('userName'))
+                            title = (live_info.get('caption') or live_info.get('title') or nick or '')
+                            cover = (live_info.get('cover_url') or live_info.get('cover') or
+                                     live_info.get('coverUrl', ''))
+                            watching = (live_info.get('watching_count') or live_info.get('user_count') or
+                                        live_info.get('watchingCount', 0))
+                            v = self.buildvod(
+                                vod_id=f"kuaishou@@{user_id}",
+                                vod_name=str(title),
+                                vod_pic=str(cover),
+                                vod_remarks=f"{nick} (观看:{watching})",
+                                style={"type": "rect", "ratio": 1.33}
+                            )
+                            vdata.append(v)
+                        if vdata:
+                            return vdata, 9999
+                except Exception:
+                    continue
+
+            # Strategy 2: 从页面嵌入式 JSON 中提取 (带括号计数)
             if tag == 'hot':
                 page_url = 'https://live.kuaishou.com/'
             else:
@@ -362,52 +414,110 @@ class Spider(Spider):
             soup = BeautifulSoup(resp.text, 'lxml')
             scripts = soup.find_all('script')
 
-            # Strategy 1: 从页面嵌入式 JSON 中提取
+            def extract_json_after_prefix(text, prefix):
+                idx = text.find(prefix)
+                if idx < 0:
+                    return None
+                start = idx + len(prefix)
+                if start >= len(text) or text[start] != '{':
+                    return None
+                brace = 0
+                for i in range(start, len(text)):
+                    if text[i] == '{':
+                        brace += 1
+                    elif text[i] == '}':
+                        brace -= 1
+                        if brace == 0:
+                            try:
+                                return json.loads(text[start:i+1])
+                            except Exception:
+                                return None
+                return None
+
+            def extract_rooms_from_json(jdata):
+                candidates = []
+                for path in [['liveroom', 'liveStream', 'feeds'],
+                             ['feeds'], ['liveRooms'], ['roomList'],
+                             ['data', 'list'], ['data', 'rooms'],
+                             ['props', 'pageProps', 'list'],
+                             ['data', 'data', 'list'],
+                             ['data', 'data', 'feeds']]:
+                    cur = jdata
+                    found = True
+                    for key in path:
+                        if isinstance(cur, dict) and key in cur:
+                            cur = cur[key]
+                        else:
+                            found = False
+                            break
+                    if found and isinstance(cur, list):
+                        candidates = cur
+                        break
+                if not candidates and isinstance(jdata, list):
+                    candidates = jdata
+                results = []
+                for item in candidates:
+                    if not isinstance(item, dict):
+                        continue
+                    live_info = (item.get('live_info') or item.get('live_stream') or
+                                 item.get('liveStream') or item)
+                    if not isinstance(live_info, dict):
+                        live_info = item
+                    user_id = (live_info.get('user_id') or live_info.get('id_str') or
+                               live_info.get('userId') or live_info.get('id'))
+                    if not user_id:
+                        continue
+                    nick = (live_info.get('user_name') or live_info.get('nickname') or
+                            live_info.get('userName'))
+                    title = (live_info.get('caption') or live_info.get('title') or nick or '')
+                    cover = (live_info.get('cover_url') or live_info.get('cover') or
+                             live_info.get('coverUrl', ''))
+                    watching = (live_info.get('watching_count') or live_info.get('user_count') or
+                                live_info.get('watchingCount', 0))
+                    results.append((str(user_id), str(nick or ''), str(title), str(cover or ''), str(watching)))
+                return results
+
             rooms = []
+            found_keywords = ['__INITIAL_STATE__', '__NUXT__', '__NEXT_DATA__', '__DATA__', 'pageData', 'initialState']
             for script in scripts:
                 text = script.string
-                if not text:
+                if not text or len(text) < 200:
                     continue
-                for pattern in [r'window\.__INITIAL_STATE__\s*=\s*({.*?});',
-                                r'window\.__NUXT__\s*=\s*({.*?});']:
-                    match = re.search(pattern, text, re.DOTALL)
-                    if not match:
+                for kw in found_keywords:
+                    prefix = f'window.{kw}='
+                    jdata = extract_json_after_prefix(text, prefix)
+                    if jdata:
+                        rooms = extract_rooms_from_json(jdata)
+                        if rooms:
+                            break
+                if rooms:
+                    break
+
+            if not rooms:
+                for script in scripts:
+                    text = script.string
+                    if not text or len(text) < 500:
                         continue
-                    try:
-                        jdata = json.loads(match.group(1))
-                        candidates = []
-                        # 尝试多种可能的 JSON 路径
-                        for path in [['liveroom', 'liveStream', 'feeds'],
-                                     ['feeds'], ['liveRooms'],
-                                     ['data', 'list'], ['data', 'rooms'],
-                                     ['props', 'pageProps', 'list']]:
-                            cur = jdata
-                            found = True
-                            for key in path:
-                                if isinstance(cur, dict) and key in cur:
-                                    cur = cur[key]
-                                else:
-                                    found = False
-                                    break
-                            if found and isinstance(cur, list):
-                                candidates = cur
-                                break
-                        for item in candidates:
-                            if isinstance(item, dict):
-                                user_id = (item.get('user_id') or item.get('id_str') or
-                                           item.get('userId') or item.get('author', {}).get('id', ''))
-                                if not user_id:
-                                    continue
-                                nick = (item.get('user_name') or item.get('nickname') or
-                                        item.get('author', {}).get('name', user_id))
-                                title = (item.get('caption') or item.get('title') or nick)
-                                cover = (item.get('cover_url') or item.get('cover') or
-                                         item.get('coverUrl', ''))
-                                watching = (item.get('watching_count') or item.get('user_count') or
-                                            item.get('watchingCount', 0))
-                                rooms.append((str(user_id), str(nick), str(title), str(cover), str(watching)))
-                    except Exception:
-                        continue
+                    if 'live' in text.lower() or 'room' in text.lower():
+                        prefix = '='
+                        start = text.find('{')
+                        if start >= 0:
+                            brace = 0
+                            for i in range(start, len(text)):
+                                if text[i] == '{':
+                                    brace += 1
+                                elif text[i] == '}':
+                                    brace -= 1
+                                    if brace == 0:
+                                        try:
+                                            jdata = json.loads(text[start:i+1])
+                                            rooms = extract_rooms_from_json(jdata)
+                                            if rooms:
+                                                break
+                                        except Exception:
+                                            pass
+                    if rooms:
+                        break
 
             if rooms:
                 for user_id, nick, title, cover, watching in rooms:
@@ -421,9 +531,9 @@ class Spider(Spider):
                     vdata.append(v)
                 return vdata, 9999
 
-            # Strategy 2: HTML 解析 (针对非 SPA 页面)
-            for selector in [('div', {'class': 'live-card'}),
-                             ('a', {'href': re.compile(r'/u/')}),
+            # Strategy 3: HTML 解析
+            for selector in [('a', {'href': re.compile(r'/u/')}),
+                             ('div', {'class': 'live-card'}),
                              ('div', {'class': re.compile(r'live')}),
                              ('li', {'class': re.compile(r'live')})]:
                 cards = soup.find_all(selector[0], selector[1])
