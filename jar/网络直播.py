@@ -51,7 +51,6 @@ class Spider(Spider):
     excepturl = 'https://www.baidu.com'
 
     hosts = {
-        "kuaishou": "https://live.kuaishou.com",
         "huya": ["https://www.huya.com", "https://mp.huya.com"],
         "douyu": "https://www.douyu.com",
         "wangyi": "https://cc.163.com",
@@ -60,7 +59,6 @@ class Spider(Spider):
     }
 
     referers = {
-        "kuaishou": "https://live.kuaishou.com",
         "huya": "https://live.cdn.huya.com",
         "douyu": "https://m.douyu.com",
         "bili": "https://live.bilibili.com",
@@ -68,10 +66,6 @@ class Spider(Spider):
     }
 
     playheaders = {
-        'kuaishou': {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-            'Referer': 'https://live.kuaishou.com'
-        },
         "wangyi": {
             "User-Agent": "ExoPlayer",
             "Connection": "Keep-Alive",
@@ -131,13 +125,9 @@ class Spider(Spider):
                                       {'n': '文化', 'v': '106$4'},
                                       {'n': '二次元', 'v': '104$4'}]}])
 
-    def process_kuaishou(self):
-        return ('kuaishou', None)
-
     def homeContent(self, filter):
         result = {}
         cateManual = {
-            "快手": "kuaishou",
             "虎牙": "huya",
             "斗鱼": "douyu",
             "网易": "wangyi",
@@ -151,9 +141,8 @@ class Spider(Spider):
                                 {'n': '娱乐', 'v': '8'}, {'n': '手游', 'v': '3'}]}]
         }
 
-        with ThreadPoolExecutor(max_workers=4) as executor:
+        with ThreadPoolExecutor(max_workers=3) as executor:
             futures = {
-                executor.submit(self.process_kuaishou): 'kuaishou',
                 executor.submit(self.process_bili): 'bili',
                 executor.submit(self.process_douyu): 'douyu',
                 executor.submit(self.process_douyin): 'douyin'
@@ -186,8 +175,6 @@ class Spider(Spider):
         result['total'] = 999999
         if tid == 'wangyi':
             vdata, pagecount = self.wyccContent(tid, pg, filter, extend, vdata)
-        elif 'kuaishou' in tid:
-            vdata, pagecount = self.kuaishouContent(tid, pg, filter, extend, vdata)
         elif 'bili' in tid:
             vdata, pagecount = self.biliContent(tid, pg, filter, extend, vdata)
         elif 'huya' in tid:
@@ -327,69 +314,6 @@ class Spider(Spider):
             print(f"抖音内容获取错误: {e}")
             return vdata, 1
 
-    def kuaishouContent(self, tid, pg, filter, extend, vdata):
-        try:
-            ks_headers = {
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-                'Referer': 'https://live.kuaishou.com/',
-                'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
-            }
-
-            resp = requests.get('https://live.kuaishou.com/', headers=ks_headers, timeout=15, verify=False)
-            if resp.status_code != 200:
-                return vdata, 1
-
-            match = re.search(r'window\.__INITIAL_STATE__\s*=\s*', resp.text)
-            if not match:
-                return vdata, 1
-
-            start = match.end()
-            if start >= len(resp.text) or resp.text[start] != '{':
-                return vdata, 1
-
-            brace = 0
-            json_end = start
-            for i in range(start, len(resp.text)):
-                if resp.text[i] == '{':
-                    brace += 1
-                elif resp.text[i] == '}':
-                    brace -= 1
-                    if brace == 0:
-                        json_end = i + 1
-                        break
-
-            init_state = json.loads(resp.text[start:json_end])
-            live_streams = init_state.get('home', {}).get('homeLiveStream', [])
-
-            if not isinstance(live_streams, list) or not live_streams:
-                return vdata, 1
-
-            for item in live_streams:
-                if not isinstance(item, dict):
-                    continue
-                author = item.get('author', {}) or {}
-                user_id = author.get('id', '') or item.get('id', '')
-                if not user_id:
-                    continue
-                nick = author.get('name', '') or ''
-                title = item.get('caption', '') or nick or ''
-                cover = item.get('poster', '') or ''
-                watching = item.get('watchingCount', 0)
-
-                v = self.buildvod(
-                    vod_id=f"kuaishou@@{user_id}",
-                    vod_name=str(title),
-                    vod_pic=str(cover),
-                    vod_remarks=f"{nick} (观看:{watching})",
-                    style={"type": "rect", "ratio": 1.33}
-                )
-                vdata.append(v)
-
-            return vdata, 9999
-        except Exception as e:
-            print(f"快手内容获取错误: {e}")
-            return vdata, 1
-
     def huyaContent(self, tid, pg, filter, extend, vdata):
         if extend.get('cate') and pg == '1' and 'click' not in tid:
             id = extend.get('cate')
@@ -466,8 +390,6 @@ class Spider(Spider):
         ids = ids[0].split('@@')
         if ids[0] == 'wangyi':
             vod = self.wyccDetail(ids)
-        elif ids[0] == 'kuaishou':
-            vod = self.kuaishouDetail(ids)
         elif ids[0] == 'bili':
             vod = self.biliDetail(ids)
         elif ids[0] == 'huya':
@@ -631,107 +553,6 @@ class Spider(Spider):
             return vod
         except Exception as e:
             print(f"抖音详情错误: {e}")
-            return self.handle_exception(e)
-
-    def kuaishouDetail(self, ids):
-        try:
-            if len(ids) < 2:
-                return self.handle_exception(Exception("快手参数不足"))
-            user_id = ids[1]
-
-            ks_headers = {
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-                'Referer': 'https://live.kuaishou.com/',
-                'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
-            }
-
-            url = f'{self.hosts["kuaishou"]}/u/{user_id}'
-            resp = self.fetch(url, headers=ks_headers, verify=False)
-            html = resp.text
-
-            # 解析 window.__INITIAL_STATE__ 或最后一个 script 标签中的 JSON
-            soup = BeautifulSoup(html, 'lxml')
-            scripts = soup.find_all('script')
-            init_state = None
-
-            for script in scripts:
-                text = script.string
-                if not text:
-                    continue
-                # 尝试匹配 window.__INITIAL_STATE__
-                match = re.search(r'window\.__INITIAL_STATE__\s*=\s*({.*?});', text, re.DOTALL)
-                if match:
-                    try:
-                        init_state = json.loads(match.group(1))
-                        break
-                    except Exception:
-                        pass
-                # 尝试匹配最后一个包含 liveroom 的 script
-                if 'liveroom' in text and 'liveStream' in text:
-                    try:
-                        json_match = re.search(r'\{.*"liveroom".*\}', text, re.DOTALL)
-                        if json_match:
-                            init_state = json.loads(json_match.group(0))
-                            break
-                    except Exception:
-                        pass
-
-            if not init_state:
-                # 尝试从最后一个 script 提取
-                for script in reversed(scripts):
-                    text = script.string
-                    if text and ('liveroom' in text or 'liveStream' in text):
-                        try:
-                            # 尝试提取 JSON 对象
-                            json_match = re.search(r'(\{.*\})', text, re.DOTALL)
-                            if json_match:
-                                init_state = json.loads(json_match.group(1))
-                                break
-                        except Exception:
-                            continue
-
-            if not init_state:
-                return self.handle_exception(Exception("快手解析页面数据失败"))
-
-            liveroom = init_state.get('liveroom', init_state)
-            if not liveroom:
-                return self.handle_exception(Exception("快手未获取到直播信息"))
-
-            live_stream = liveroom.get('liveStream', liveroom)
-            author = liveroom.get('author', {})
-            nick = author.get('name', user_id)
-            title = live_stream.get('caption', nick)
-
-            play_urls = live_stream.get('playUrls', [])
-            if not play_urls:
-                return self.handle_exception(Exception("快手无可用播放地址"))
-
-            episodes = []
-            for pu in play_urls:
-                adapt_set = pu.get('adaptationSet', {})
-                representations = adapt_set.get('representation', [])
-                if not isinstance(representations, list):
-                    representations = [representations]
-                for rep in representations:
-                    quality = rep.get('name', '流畅')
-                    url = rep.get('url', '') or rep.get('mainUrl', '')
-                    if url:
-                        episodes.append(f"{quality}$kuaishou@@{url}")
-
-            if not episodes:
-                return self.handle_exception(Exception("快手无可用播放地址"))
-
-            vod = self.buildvod(
-                vod_name=title,
-                vod_actor=nick,
-                vod_content=title,
-                vod_play_from='快手直播',
-                vod_play_url='#'.join(episodes)
-            )
-            return vod
-
-        except Exception as e:
-            print(f"快手详情错误: {e}")
             return self.handle_exception(e)
 
     def huyaDetail(self, ids):
@@ -1146,8 +967,6 @@ class Spider(Spider):
             p = 1
             if ids[0] in ['wangyi']:
                 p, url = 0, json.loads(self.d64(ids[1]))
-            elif ids[0] == 'kuaishou':
-                p, url = 0, ids[1] if len(ids) > 1 else id
             elif ids[0] == 'bili':
                 p, url = 0, ids[1] if len(ids) > 1 else id
             elif ids[0] == 'huya':
