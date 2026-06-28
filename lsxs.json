@@ -144,9 +144,9 @@
     },
     {
       "key": "爱看剧",
-      "name": "看剧❤Github多线A",
+      "name": "看剧❤Github",
       "type": 3,
-      "api": "https://gh-proxy.com/https://raw.githubusercontent.com/IY-CPU/IY/main/lib/AppToV5.py",
+      "api": "https://gh-proxy.com/https://raw.githubusercontent.com/lsghmac/ls/main/jar/AppToV5.py",
       "ext": "http://43.248.117.123:4680"
     },
     {
@@ -164,24 +164,6 @@
       }
     },
     {
-      "key": "抖音直播",
-      "name": "抖音直播 🎶 NM",
-      "type": 3,
-      "api": "http://nn.4688888.xyz/py/抖音.py",
-      "searchable": 0,
-      "quickSearch": 0,
-      "filterable": 1
-    },
-    {
-      "key": "哔哩直播",
-      "name": "哔哩直播 🅱️ NM",
-      "type": 3,
-      "api": "http://nn.4688888.xyz/py/%E5%93%94%E5%93%A9%E7%9B%B4%E6%92%AD.py",
-      "searchable": 0,
-      "quickSearch": 0,
-      "filterable": 1
-    },
-    {
       "key": "酷狗直播",
       "name": "酷狗直播 🐶 NM",
       "type": 4,
@@ -192,9 +174,9 @@
     },
     {
       "key": "网络直播",
-      "name": "网络❤直播",
+      "name": "直播聚合❤测试",
       "type": 3,
-      "api": "https://gh-proxy.com/https://raw.githubusercontent.com/lsghmac/ls/main/jar/网络直播.py"
+      "api": "https://ghfast.top/https://raw.githubusercontent.com/qist/tvbox/refs/heads/master/xiaosa/py/网络直播.py"
     },
     {
       "key": "csp_Kugou",
